@@ -3,9 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import nextConnect from 'next-connect'
 
 export interface NextApiRequestExtended extends NextApiRequest {
-    email: string | null;
-    name: string | null;
-    image: string | null; 
+    filter: string | string[];
+    value: string | string[] | null;
+    params: any;
+    email: string | string[];
+    name: string | string[];
+    image: string | string[]; 
+    slug: string | string[]; 
 }
 
 export default function getHandler() {
@@ -16,16 +20,18 @@ export default function getHandler() {
         onNoMatch(req, res) {
             res.status(405).json({ error: `Method ${req.method} not allowed on the path`}); 
         },
+        attachParams: true,
     }).use((req, res, next) => {
             // TODO: call await getSession() here
-            req.email = null;
-            req.name = null;
-            req.image = null; 
+            req.email = '';
+            req.name = '';
+            req.image = ''; 
 
             // TODO if(!session) { next(); } -> ?? throw a 403?
-            req.email = 'sanshit.sagar@gmail.com';
-            req.name = 'Sanshit Sagar';
-            req.image = 'https://vercel.com/api/www/avatar/acpdcw8EbDA1fgbBGE6umxiX?&s=160'
+
+            req.email = req.query.email || ''
+            req.name = req.query.name || ''
+            req.slug = req.query.slug || ''
             
             next(); 
     }); 
