@@ -19,7 +19,7 @@
       "module": "esnext",
       "moduleResolution": "node",
       "noEmit": true,
-      "noFallthroughCasesInSwitch": t, "lib/utils/xyseries.js", "lib/utils/timeseries.js"rue,
+      "noFallthroughCasesInSwitch": true,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "resolveJsonModule": true,
@@ -28,5 +28,5 @@
       "target": "esnext"
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["**/*.ts", "**/*.tsx", "components/Pie.js"]
   }

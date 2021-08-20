@@ -22,11 +22,6 @@ export interface TimeSeries {
     start: number
 }
 
-// interface IPeriodStats {
-//     periodStart: number,
-//     progressInPeriod: number;
-// }
-
 const SEC_IN_MILLIS = 1000;
 const MINUTE_IN_MILLIS = 60*SEC_IN_MILLIS; 
 const HOUR_IN_MILLIS = 60*MINUTE_IN_MILLIS; 
@@ -54,11 +49,18 @@ export function getHourlySeries(startTimestamp: number, endTimestamp: number): T
         },
         hour: (startHour + i + 1)%24,
         date: Math.floor(startDate + ((startHour + i + 1)/24)), 
-        month: Math.floor(startMonth + (startDate + ((startHour + i + 1)/24)) % daysInMonth(startMonth + (startDate + ((startHour + i + 1)/24))))
+        month: startMonth,
     })); 
 
     return { timeseries, duration, numPeriods, start: new Date(startTimestamp).getTime() }
 }   
+
+
+
+// interface IPeriodStats {
+//     periodStart: number,
+//     progressInPeriod: number;
+// }
 
 // export function getMinutelySeries(startTimestamp: number, endTimestamp: number): any[] {
 //     const duration: number = endTimestamp - startTimestamp
