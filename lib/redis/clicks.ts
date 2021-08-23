@@ -6,29 +6,6 @@ import {
 } from '../utils/formatters';
 
 import { setTimeForDate } from '../utils/dateUtils'
-// interface Point {
-//     x: number;
-//     y: number;
-//     slug: string; 
-//     msOfDay: number;
-//     secOfDay: number; 
-//     minOfDay: number; //  Min in day >= 0 && <= 1440
-//     hourOfDay: number;
-//     dayOfYear: number; 
-//     dateOfMonth: number;
-//     dayOfWeek: number;
-//     timestamp: number;
-//     localizedDatetime: string;
-// }
-
-// interface Voronoi {
-//     points: Point[];
-//     size: number;
-//     start: number;
-//     end: number; 
-//     category: string;
-//     user: string;
-// }
 
 export const getClickstream = async (email: string | string[]): Promise<any[] | null> => {
     let clickstream: any[] = [];
@@ -42,10 +19,7 @@ export const getClickstream = async (email: string | string[]): Promise<any[] | 
 }
 
 export const getClickByCfRay = async (cfRay: string | string[]): Promise<any> => {
-    // console.log('Getting clicks by cfRay');
     const clickWithCfRay: any = await redis.hget('cfray.to.click', cfRay); 
-    // console.log(`Got the value ${clickWithCfRay.requestHeaders}`); 
-
     return !clickWithCfRay ? [] : formatClick(clickWithCfRay); 
 }
 
@@ -125,31 +99,27 @@ function filterClickstreamBySlugOrUser(results: any[], filterValue: string, filt
 export async function getDoubleEndedClickstream(start?: number, end?: number, filterValue?: string, filterName?: string, isAsc?: boolean | null): Promise<any> {
     
     let lexResults: any[] = [];
+
     if(filterValue && filterName && filterName==='slug') {
         let slug: string = filterValue;
         if(start && end) {
-            console.log('hit3')
             lexResults = await redis.zrangebylex('clickstream.chronological.by.slug', `[${start}`, `(${end}`);
         } else {
-            console.log('hit4')
             lexResults = await redis.zrangebylex('clickstream.chronological.by.slug', `[${new Date(1,1,1970).getTime()}`, `(${new Date().getTime()}`);
         }
         let { output, frequencies, minTimestamp, maxTimestamp, dates } = filterClickstreamBySlugOrUser(lexResults, slug, 'slug'); 
-        
+
         return { views: [...output], minTimestamp, maxTimestamp }
     } else if(filterValue && filterName && filterName==='user') {
         
         let user: string = filterValue; 
         if(start && end && start!==0 && end!==-1) {
-            console.log('hit1')
             lexResults = await redis.zrangebylex(`clickstream.chronological.by.slug`, `[${start}`, `(${end}`);
         } else {
-            console.log('hit2')
             lexResults = await redis.zrangebylex(`clickstream.chronological.by.slug`,`[${new Date(1,1,1970).getTime()}`, `(${new Date().getTime()}`);
         }
 
-        let { output, frequencies, minTimestamp, maxTimestamp, dates } = filterClickstreamBySlugOrUser(lexResults, user, 'user'); 
-        lexResults = [...output]; 
+        let { output, frequencies, minTimestamp, maxTimestamp, dates } = filterClickstreamBySlugOrUser(lexResults, user, 'user');  
         return { views: [...output], minTimestamp, maxTimestamp }
     } else {
         lexResults = await redis.zrangebylex('clickstream.chronological', `[${start}`, `(${end}`);

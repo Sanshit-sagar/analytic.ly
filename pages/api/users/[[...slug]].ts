@@ -6,12 +6,21 @@ import {
     getClickstreamForUser,
     getUniqueVisitorsForUser,
     getFrequenciesByCategoryForUser,
+    getFrequenciesForUserSlugs,
+    getRankedUniqueIpsForSlugsForUser,
+    formatUniques
 } from '../../../lib/redis/users'
 import { 
-    getUniqueVisitorsFromSlugs 
+    getUniqueVisitorsFromSlugs
 } from '../../../lib/redis/slugs'
+import { 
+    getPromisesForRankedUniquesForSlugsForUser,
+    promisifyAll
+} from '../../../lib/bluebird'
 
 import * as d3 from 'd3'
+import * as Promise from "bluebird"
+import redis from '../../../lib/redis/index'
 
 const validCategories: any = {
     "tlsVersion": true,
@@ -51,22 +60,49 @@ export default getHandler()
             res.status(403).json({ error: 'BAD_REQUEST_INVALID_SLUG' })
         }
     })
-    .get('/api/users/:user/uniques', async (req: NextApiRequestExtended, res: NextApiResponse) => {
-        const email: string = req.params.user
+    .get('/api/users/:email/rankings/frequencies', async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        const email: string = req.params.email
 
         if(email) {
-            const userSlugsWithScores = await getUniqueVisitorsForUser(email);
-            const clickstream = await getClickstreamForUser(email);
-            const clickstreamGroupedBySlugs = d3.group(clickstream, (click: any, idx: number) => click.ipAd);
+            try {
+                const { rankingsByFreq, category } = await getUniqueVisitorsForUser(email)
 
-            res.status(200).json({ 
-                userUniques: userSlugsWithScores.rankings.reverse(), 
-                category: userSlugsWithScores.category,
-                firsts: userSlugsWithScores.firsts,
-                clickstream: clickstreamGroupedBySlugs,
-            }); 
+                res.status(200).json({ 
+                    frequency: rankingsByFreq,
+                    category,
+                }); 
+            } catch(error) {
+                res.status(500).json({ error: `${error.message}` })
+            }
         } else {
             res.status(403).json({ error: 'BAD REQUEST INVALID EMAIL' });
+        }
+    })
+     .get('/api/users/:email/rankings/uniques', async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        const email: string = req.params.email
+
+        if(email) {
+            const uniques = await getViewsForUser(email)
+            
+            let promises: Promise[] = [];
+            let uniqueMap: any = {}
+            uniques.map((uniqueSlug: string, i: number) => {
+                promises.push(new Promise(function(resolve, reject) {  
+                        redis.zrange(`ip.by.slug.${uniqueSlug}`, 0, -1, 'WITHSCORES')
+                        .then((response) => {
+                            return resolve(uniqueMap[uniqueSlug] = formatUniques(response)) 
+                        }).catch((error) => {
+                            return reject(new Error(`${error.message}`)) 
+                        });
+                    })
+                );
+            });
+
+            Promise.all(promises)
+            .then((results: any)  => res.status(200).json({ uniques: uniqueMap }))
+            .catch((error: any) => res.status(500).json({ error: `${error.message}`}));
+        } else {
+            res.status(403).json({ error: 'BAD REQUEST' })
         }
     })
     .get('/api/users/:user/frequencies/:filter', async (req: NextApiRequestExtended, res: NextApiResponse) => {
@@ -88,3 +124,5 @@ export default getHandler()
             res.status(403).json({ error: 'BAD REQUEST INVALID EMAIL' });
         }
     });
+
+

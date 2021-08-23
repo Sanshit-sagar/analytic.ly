@@ -3,10 +3,10 @@ import React from 'react';
 import { Box } from '../primitives/Box'
 import { Flex } from '../primitives/Flex'
 
-import PieChart from '../components/Pie'
+// import PieChart from '../components/Pie'
 import Wrapper from '../components/Wrapper'
-import UniqueBars from '../components/Bars'
-import Curve from '../components/Curve'
+// import UniqueBars from '../components/Bars'
+// import Curve from '../components/Curve'
 
 const Home = () => {
 
@@ -17,6 +17,7 @@ const Home = () => {
           {/* <PieChart />  */}
           {/* <UniqueBars />   */}
           {/* <Curve />  */}
+          {/* <Mercator /> */}
         </Flex>
       </Box>
   );

@@ -1,16 +1,16 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
+import { styled, darkTheme, theme as lightTheme } from '../../stitches.config'
 
-import { darkTheme, theme as lightTheme } from '../../stitches.config'
-import { styled } from '@stitches/react'
 import SelectionMenu from '../RangeSelector'
-import Timeseries from '../Timeseries/AreaLine'
-import { DashboardDisplayBox } from "../../primitives/Shared"
-import UniqueBars from "../Bars"
-import PieChart from '../Pie'
+import { DashboardDisplayBox } from '../../primitives/Shared'
 
 import { Flex } from '../../primitives/Flex'
 import { Box } from '../../primitives/Box'
 
+import UniqueBars from "../Bars"
+import PieChart from '../Pie'
+import HeatedGeo from '../Geo'
+import Timeseries from '../Timeseries/AreaLine'
 
 const StyledAppContainer = styled('div', {
     height: '100vh',
@@ -42,8 +42,8 @@ export interface WrapperProps {
 
 const Wrapper = () => {
     const [amount, setAmount] = useState('1')
-    const [range, setRange] = useState('day')
-    const [interval, setInterval] = useState('hour')
+    const [range, setRange] = useState('week')
+    const [interval, setInterval] = useState('day')
     const [darkMode, setDarkMode] = useState(true)
 
     const toggleDarkMode = () => darkMode ? setDarkMode(false) : setDarkMode(true);
@@ -86,12 +86,17 @@ const Wrapper = () => {
                             updateInterval={handleIntervalUpdate}
                             toggleDarkMode={toggleDarkMode}
                         />    
-                        <UniqueBars darkMode={darkMode} />
+                        <UniqueBars 
+                            darkMode={darkMode} 
+                        />
                     </DashboardDisplayBox>
                 </Flex>
 
                 <Flex css={{ fd: 'row', jc: 'flex-start', ai: 'stretch', gap: '$1' }}>
-                    <PieChart darkMode={darkMode} /> 
+                    <PieChart 
+                        darkMode={darkMode} 
+                    /> 
+                    <HeatedGeo />
                 </Flex>
             </Box>
         </StyledAppContainer>

@@ -46,7 +46,6 @@ export const useUniques = () => {
     }
 }
 
-// amount: number, range: string, interval: string
 export const useClickHistoryForUser = (amount: string, range: string, interval: string) => {
     let endpoint = `/api/metrics/user/sanshit.sagar@gmail.com/tail/${amount}/${range}/${interval}`
 
@@ -97,5 +96,33 @@ export const useFrequencies = (filter: string = 'browser') => {
         freqs: data?.categoryFrequencies || {},
         loading: !data && !error,
         error,
+    };
+}
+
+export const useUserRankings = (category: string, email?: string) => {
+    let rankingCategory = category==='freqs' ? 'frequencies' : 'uniques'
+    let endpoint = `/api/users/sanshit.sagar@gmail.com/rankings/${rankingCategory}`
+
+    const { data, error } = useSWR(endpoint, fetcher);
+
+    return category==='freqs' ? {
+            views: data || null, 
+            vloading: !data && !error , 
+            vError: error 
+         } : { 
+            uniques: data?.uniques || null,
+            uloading: !data && !error , 
+            uError: error 
+        }
+}
+
+export const useGeodata = (fetchStats: boolean = false, mode?: string) => {
+    let endpoint = `/api/geo/clicks/user/sanshit.sagar@gmail.com`
+    const { data, error } = useSWR(endpoint, fetcher)
+
+    return {
+        geodata: data?.geodata || null,
+        loading: !data && !error,
+        error
     };
 }

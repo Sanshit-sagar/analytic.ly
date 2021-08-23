@@ -17,10 +17,11 @@ import { ThemeConfig } from '@visx/xychart/lib/theme/buildChartTheme'
 import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
-import { VisxParentSizeWrapper } from '../../primitives/Shared'
-import { format } from '../../lib/utils/d3time'
 
-const DEFAULT_MARGIN = { top: 25, right: 50, bottom: 32.5, left: 35 };
+import { format } from '../../lib/utils/d3time'
+import { VisxParentSizeWrapper } from '../../primitives/Shared'
+
+const DEFAULT_MARGIN = { top: 10, right: 5, bottom: 50, left: 25 };
 type Key = "click" | "unique";
 
 interface IMarginProps {
@@ -90,6 +91,8 @@ const Chart = ({
 
   const xAccessor: (d: Datum) => string = (d: Datum) => d.x
   const yAccessor: (d: Datum) => number = (d: Datum) => d.y
+  let yMax: number = 0; 
+  clicks.map((c: Datum) => yMax = Math.max(yMax, c.y));
 
   const dataA: Datum[] = new Array(clicks.length).fill(null).map((_, i) => ({
     key: 'click',
@@ -98,8 +101,6 @@ const Chart = ({
     timestamp: formatClickDate(clicks[i].x, minTimestamp, interval),
   }));
 
-  // const innerWidth = width - margin.left - margin.right;
-  // const innerHeight = height - margin.top - margin.bottom;
   const BACKGROUND = !darkMode ? "rgba(50,50,50, 1.0)" : 'rgba(255,255,255,1.0)'
 
   return (
@@ -122,26 +123,45 @@ const Chart = ({
         >
         <AnimatedGrid 
           stroke={'#fff'}
-          strokeDasharray="5 5"
+          strokeDasharray="5 10"
           strokeOpacity={0.25}
           animationTrajectory={'center'}
         />
-        {!loading && !error && clicks &&
-          <AnimatedLineSeries
-            dataKey="Clicks"
-            data={dataA}
-            xAccessor={xAccessor}
-            yAccessor={yAccessor}
-          />
-        }
+        <AnimatedLineSeries
+          dataKey="Clicks"
+          data={dataA}
+          xAccessor={xAccessor}
+          yAccessor={yAccessor}
+        />
         <AnimatedAxis 
           orientation="left" 
-          numTicks={4}
-          tickValues={clicks.map((click: any, _:number) => click.y).filter((y: number, _: number) => Math.max(parseInt(`${y}`), (1/parseInt(`${y}`))) === y)}
+          hideTicks
+          hideAxisLine
+          tickFormat={(t: number, _:number) => t%1===0 ? `${t}` : ''}
+          tickLabelProps={() => ({
+              fontSize: 12,
+              fontStyle: "light",
+              fontWeight: 200,
+              lineHeight: 19,
+              textTransform: "uppercase",
+              fill: '#fff'
+          })}
         /> 
         <AnimatedAxis 
           orientation="bottom" 
           numTicks={2}  
+          hideTicks
+          stroke={'transparent'}
+          labelOffset={10}
+          tickLabelProps={() => ({
+            fill: '#fff',
+            fontSize: 10,
+            fontStyle: "light",
+            textAnchor: 'end',
+            lineHeight: 10,
+            textTransform: "lowercase",
+            opacity: 1.0,
+          })}
           tickValues={clicks.map((_: any, i: number) => clicks[i].x).filter((cx: any, _: number) => parseInt(`${cx}`)%(clicks.length/4)===0)}
           tickFormat={(x: number, _: number) => formatClickDate(x, minTimestamp, interval)}
         />

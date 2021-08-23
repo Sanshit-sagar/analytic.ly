@@ -81,19 +81,16 @@ function Bars({ data, width, height, events = false, backdrop }: BarsProps) {
   } = useTooltip<TooltipData>();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({ scroll: true });
-  // const background = '#612efb';
-  const xScale = useMemo(
-    () =>
-      scaleBand<string>({
-        range: [0, xMax],
-        round: true,
-        domain: data.map(getLetter),
-        padding: 0.4,
-      }),
-    [xMax],
-  );
-  const yScale = useMemo(
-    () =>
+  
+  const xScale = useMemo(() =>
+    scaleBand<string>({
+          range: [0, xMax],
+          round: true,
+          domain: data.map(getLetter),
+          padding: 0.4,
+    }), [xMax]);
+
+  const yScale = useMemo(() =>
       scaleLinear<number>({
         range: [yMax, 0],
         round: true,

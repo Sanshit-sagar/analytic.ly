@@ -42,16 +42,22 @@ const MILLI_VALUES = {
     'month': MILLIS_PER_SEC * SECS_PER_MIN * MINS_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK * daysInMonth(new Date().getMonth())
 }
 
+function isSecondInterval(interval: string): boolean {return interval.startsWith('sec');}
+function isDayInterval(interval: string): boolean {return interval.startsWith('day');}
+function isMinuteInterval(interval: string): boolean {return interval.startsWith('min');}
+function isHourInterval(interval: string): boolean {return interval.startsWith('hour');}
+function isWeekInterval(interval: string): boolean {return interval.startsWith('week');}
+
+
 export function getTicksInRange(start: number, end: number, interval?: string, outputfmt?: string): number[] {
     if(!start || !end) return [];
 
     let output: number[] | undefined = [];
-    let fmtresult: number | undefined = 0;
     let cti: d3.CountableTimeInterval | undefined = getCountableInterval(interval)
     
     if(cti !== undefined) {
         cti.every(1)?.range(new Date(start), new Date(end)).map((val: Date, _: number) => {
-            fmtresult = cti?.count(new Date(start), new Date(val)) 
+            const fmtresult: number | undefined = cti?.count(new Date(start), new Date(val)) 
             if(fmtresult) output?.push(fmtresult);
         });
     } else {
@@ -63,37 +69,28 @@ export function getTicksInRange(start: number, end: number, interval?: string, o
 export function getRangeBoundaries(amount: number, range: string, interval: string): number[] {
     let start: number = new Date().getTime();
     let end: number = start; 
+    console.log('getting boundaries')
 
-    if(range==='hour') {
-        start -= amount*MILLI_VALUES['hour'];
-    } else if(range==='day') {
-        start -= amount*MILLI_VALUES['day'];
-    }if(range==='week') {
-        start -= amount*MILLI_VALUES['week'];
-    } else if(range==='month') {
-        start -= amount*MILLI_VALUES['month'];
-    }
+    if(range.startsWith('hour')) start -= amount*MILLI_VALUES['hour'];
+    else if(range.startsWith('day')) start -= amount*MILLI_VALUES['day'];
+    else if(range.startsWith('week')) start -= amount*MILLI_VALUES['week'];
+    else if(range.startsWith('month')) start -= amount*MILLI_VALUES['month'];
 
+    console.log(`Returning: ${start} - ${end}`); 
     return [start, end]; 
 }
 
 export function getCountableInterval(interval: string | undefined): d3.CountableTimeInterval | undefined {
-    if(!interval) return undefined;
-    if(isSecondInterval(interval)) return d3.timeSecond;
-    else if(isMinuteInterval(interval)) return d3.timeMinute;
-    else if(isHourInterval(interval)) return d3.timeHour;
-    else return undefined;
-}
-
-function isSecondInterval(interval: string): boolean {
-    return interval.startsWith('sec');
-}
-
-function isMinuteInterval(interval: string): boolean {
-    return interval.startsWith('min');
-}
-function isHourInterval(interval: string): boolean {
-    return interval.startsWith('hour');
+    try {
+        if(isSecondInterval(interval)) return d3.timeSecond;
+        if(isDayInterval(interval)) return d3.timeDay; 
+        if(isMinuteInterval(interval)) return d3.timeMinute;
+        if(isHourInterval(interval)) return d3.timeHour;
+        if(isWeekInterval(interval)) return d3.timeWeek;
+        return undefined;
+    } catch(error) {
+        return undefined; 
+    }
 }
 
 export function format(date: Date, fmt?: string) {

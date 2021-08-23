@@ -1,11 +1,11 @@
 import redis from './index'
 
 import {
-    sanitizeSlug,
     ScoredSlug,
     SlugRankings,
     formatClickstream,
     formatAndSortSlugs,
+    sanitizeSlug
 } from '../utils/formatters'
 import {
     daysInMonth
@@ -30,28 +30,42 @@ export async function getUniqueViewsForUser(email: string): Promise<number> {
 export async function getUniqueVisitorsForUser(email: string, limit?: number): Promise<any>  {
     
     const slugs: string[] = await redis.zrevrange(`user.${email}.clickcount`, 0, -1, 'WITHSCORES');
-    const rankings: ScoredSlug[] = formatAndSortSlugs(slugs, limit); 
-    
-    const firsts: any = {};
-    const details: any = await redis.lrange(`clickstream.user.${email}`, 0, -1); 
-    // MAKE THIS REDUNDANT BY USING MESSAGE QUEUE TO CACHE slug.firstSeenAt.set(slug, timestamp)
-
-    details.map((detail: any, _: number) => {
-        let clickEvent = JSON.parse(detail);
-
-        if(!firsts[clickEvent.slug]) {
-            firsts[clickEvent.slug] = { 
-                timestamp: clickEvent.timestamp, 
-                details: clickEvent 
-            };
-        } 
-    }); 
+    const rankingsByFreq: ScoredSlug[] = formatAndSortSlugs(slugs, limit); 
 
     return {
         category: `Views for ${email}'s Slugs`,
-        rankings,
-        firsts,
+        rankingsByFreq
     }; 
+}
+
+export async function getFrequenciesForUserSlugs(rankedSlugs) {
+    try {
+        let uc = [];
+        let uniqueMap = {};
+        let maxUnique: number = 0; 
+        let totalUniques: number = 0;
+
+        await rankedSlugs.map(async function(rankedSlug: any, idx: number) {
+            let slugName = rankedSlug.title
+            let slugScore = rankedSlug.score
+
+            let uniqueCount = await redis.zcard(`slug.${sanitizeSlug(slugName)}.clickcount`);
+            let currUc = `${slugName}--${slugScore}--${uniqueCount}`;
+            uc.push(currUc);
+
+            if(uniqueCount > 0) {
+                uniqueMap[`${slugName}`] = uniqueCount;
+            }
+            totalUniques += uniqueCount;
+            maxUnique = Math.max(maxUnique, uniqueCount); 
+        });
+
+        console.log(`UC:: ${JSON.stringify(uc)}`);
+        return { uc, totalUniques, maxUnique } 
+    } catch(error) {
+        console.error(error.message)
+        throw new Error({ message: `Encountered an error: ${error.message}` })
+    }
 }
 
 export async function getFrequenciesByCategoryForUser(email: string, category: string): Promise<SlugRankings> {
@@ -63,6 +77,70 @@ export async function getFrequenciesByCategoryForUser(email: string, category: s
         rankings
     };
 }
+
+
+interface RankedUnique {
+    slug: string;
+    uniques: number; 
+    normal?: number; 
+    rank?: number;
+}
+
+interface UniqueRankings {
+    rankings: RankedUnique[];
+    max: number;
+    category?: string;
+}
+
+
+export async function getUniqueIpsForSlug(slug: string): Promise<string[]> {
+    const uniqueIps = await redis.zrange(`ip.by.slug.${slug}`, 0, -1); 
+    return uniqueIps; 
+}
+
+export function formatUniques(uniqueIps: string[], limit?: number) {
+    let rankingsByUniques: RankedUnique[] = [];
+    let maxUniques: number = 0;
+
+    uniqueIps.map((uniqueIp, index) => {
+        if(index%2===0) {
+            rankingsByUniques.push({
+                slug: uniqueIps[index],
+                uniques: parseInt(uniqueIps[index + 1]),
+                normal: parseInt(uniqueIps[index + 1])
+            });
+            maxUniques = Math.max(maxUniques, uniqueIps[index + 1])
+        }
+    });
+
+    rankingsByUniques.sort((a,b) => b.uniques - a.uniques);
+    rankingsByUniques.map((ranking, index) => {
+        rankingsByUniques[index].normal = parseFloat(rankingsByUniques[index].normal/maxUniques)
+        rankingsByUniques[index].rank = index+1
+    });
+
+    return { 
+        rankings: rankingsByUniques, 
+        max: maxUniques
+    }; 
+}
+
+export async function getRankedUniqueIpsForSlug(slug: string, limit?: number): Promise<UniqueRankings> {
+    const uniqueIps = await redis.zrange(`ip.by.slug.${slug}`, 0, -1, 'WITHSCORES');
+    const { rankings, max }: UniqueRankings = formatAndSortUniques(uniqueIps, limit); 
+
+    return {
+        category: `Unique Visitors for ${slug}`,
+        rankings,
+        max 
+    };
+}
+
+export async function getRankedUniqueIpsForSlugsForUser(email: string, limit?: number): Promise<string[]> {
+    const slugs = await redis.zrange(`user.${email}.clickcount`, 0, -1);
+    return slugs; 
+}
+
 
 export interface Point {
     key: string;

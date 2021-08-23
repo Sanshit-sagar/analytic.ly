@@ -1,9 +1,9 @@
 import React from 'react'
-import { Bar } from '@visx/shape'
+import { Bar, BarGroup } from '@visx/shape'
 import { Grid } from '@visx/grid'
 import { Group } from '@visx/group'
 import { AxisBottom, AxisLeft } from '@visx/axis'
-import { scaleLinear, scaleBand } from '@visx/scale'
+import { scaleLinear, scaleBand, scaleOrdinal } from '@visx/scale'
 import ParentSize from '@visx/responsive/lib/components/ParentSize'
 import { localPoint } from '@visx/event'
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
@@ -12,9 +12,9 @@ import Loading from '../Loading'
 import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
-import { DashboardDisplayBox, VisxParentSizeWrapper } from '../../primitives/Shared'
+import { VisxParentSizeWrapper } from '../../primitives/Shared'
 
-import { useUniques } from '../../hooks/useClicks'
+import { useUserRankings } from '../../hooks/useClicks'
 import { format } from '../../lib/utils/d3time'
 
 const DEFAULT_MARGIN  = { top: 20, bottom: 50, left: 30, right: 50 };
@@ -22,8 +22,6 @@ const colors: string[] = ['#33ffaa', '#109CF1', '#a12' ]
 const BLACK = 'rgba(50,50,50, 1.0)'
 const WHITE = 'rgba(255,255,255,1.0)'
 const GREEN = colors[0]
-// const BLUE = colors[1]
-// const RED = colors[2] 
 
 const animationTrajectory = 'center'
 
@@ -33,6 +31,15 @@ const tooltipStyles = {
     backgroundColor: WHITE,
     color: BLACK
 };
+const tooltipLabels = {
+    category: 'Category',
+    barType: 'Bar Type',
+    freq: 'Total Pageviews',
+    uniques: 'Unique Views',
+    rank: 'Rank',
+    normal: 'Normalized Score',
+    visitorIps: 'Visitor IPs'
+}
 
 interface MarginProps {
     top: number; 
@@ -45,12 +52,16 @@ type BarStackProps = {
     width: number;
     height: number;
     margin?: MarginProps;
-    uniques: any;
-    firsts: any; 
+    freqs: any[];
+    uniques: any[];
+    darkMode: boolean;
 };
 
 type TooltipData = {
-    unique: Datum;
+    slug: string;
+    rank: number;
+    frequency: number;
+    normal: number;
 };
 
 interface Datum {
@@ -60,16 +71,35 @@ interface Datum {
     normalizedFreq: number; 
 }
 
-
 let tooltipTimeout: number;
+
+const VisitorIpsList: React.FC<string> = ({ uniques, ips, slug }) => {
+
+    return (
+        <Box>
+
+            <Text size='1' css={{ textDecoration: 'underline', textDecorationColor: GREEN}}> Visitor IPs: </Text>
+            <Flex css={{ fd: 'column', jc: 'flex-end', ai: 'flex-start' }}>
+                {ips.map((ip,i) => {
+                    return (
+                        <Flex>
+                         <Text size='1'> {ip.substring(0,25)} </Text> 
+                         <Text size='1'> {JSON.stringify(uniques[slug])} </Text>
+                        </Flex>
+                    );
+                })}
+            </Flex> 
+        </Box>
+    )
+}
 
 const CustomChart = ({  
     width = 300, 
     height = 300, 
     margin = DEFAULT_MARGIN, 
+    freqs,
     uniques,
-    darkMode,
-    firsts
+    darkMode = true
 }: BarStackProps) => {
     const {
         tooltipOpen,
@@ -86,20 +116,27 @@ const CustomChart = ({
     
     if(width < 10) return null;
 
-    const slug: (d: Datum) => string = (d: Datum) => d.title; 
-    // const freq: (d: Datum) => number = (d: Datum) => d.score;
-    // const rank: (d: Datum) => number = (d: Datum) => d.rank; 
-    // const normal: (d: Datum) => number = (d: Datum) => d.normalizedFreq;
-    
+    let uniquesArr = Object.entries(uniques)
+    let keys = freqs.map((fr, idx) => fr.title)
+
+    const barType = (i: number) => i%2===0 ? 'Frequency' : 'Unique'
+    const slug: (d: Datum) => string = (d: Datum) => d.title
+    const freq: (d: Datum) => number = (d: Datum) => d.score
+    const rank: (d: Datum) => number = (d: Datum) => d.rank
+    const normal: (d: Datum) => number = (d: Datum) => d.normalizedFreq
+    const unique = (d: Datum) => uniques[slug(d)].rankings.length
+    const uniqueNormal = (d: Datum) => `${Math.round((unique(d)/maxFreq)*100)}%`;
+    const uniqueRank = (i: number) => (i-1)/2;
+    const visitorIps = (d: Datum) => uniques[slug(d)].rankings.map((ranking, _) => ranking.slug)
+    const tooltipContent = (i: number, td: any) => i%2===0 ? td.frequencyProps : td.uniqueProps
+
     const xMax = width;
     const yMax = height - margin.top - margin.bottom
-
-    // const firstSeens = [...Object.entries(firsts)]
-    // const numUnique = firstSeens.length
-    const maxFreq = uniques[0].score
+    const maxFreq = freqs[0].score
+    const maxUnique = uniquesArr[uniquesArr.length - 1][1].max
 
     const slugScale = scaleBand<string>({
-        domain: uniques.map(slug),
+        domain: freqs.map(slug),
         padding: 0.2,
     });
     slugScale.rangeRound([0, xMax]);
@@ -109,9 +146,44 @@ const CustomChart = ({
         range: [yMax, 0],
         nice: true
     });
+
+    const uniquesScale = scaleLinear<number>({
+        domain: [0, 1],
+        range: [yMax, 0],
+        nice: true
+    });
+    // const colorScale = scaleOrdinal<string, string>({
+    //     domain: keys,
+    //     range: [
+    //         'blue', 
+    //         'green', 
+    //         'purple'
+    //     ],
+    // });
     
     const formatSlug = (slug: string, _: number) => `${slug.split('-')[0].substring(0,8)}`
     const formatFrequency = (frequency: number) => Math.round(frequency * maxFreq)
+
+    let freqsBg = []
+    freqs.map((f) => {
+        freqsBg.push(f);
+        freqsBg.push(f); 
+    }); 
+
+    function formatTooltipProps(d: any, i: index) {
+        const isFreq: boolean = barType(i)==='Frequency';
+
+        let tooltipData = {
+            category: barType(i),
+            slug: slug(d),
+            frequency: isFreq ? freq(d) : '',
+            uniques: isFreq ? '' : unique(d),
+            rank: isFreq ? rank(d) : uniqueRank(i),
+            normal: isFreq ? `${Math.round(normal(d)*100)}%` : uniqueNormal(d),
+            visitorIps: isFreq ? [] : visitorIps(d),
+        };
+        return tooltipData; 
+    }
 
     return (
         <div style={{ position: "relative" }}>
@@ -129,27 +201,35 @@ const CustomChart = ({
                 left={0}
                 xScale={slugScale}
                 yScale={frequencyScale}
-                width={xMax}
-                height={yMax}
+                width={width}
+                height={height}
                 stroke={WHITE}
                 strokeDasharray="5 5"
                 strokeOpacity={0.1}
             />
             <Group top={margin.top}>
-                {uniques.map((unique: Datum, _: number) => {
-                    const barWidth: number = slugScale.bandwidth()/2;
-                    const barHeight: number = yMax - frequencyScale(unique.normalizedFreq);
-                    const barX: number = slugScale(unique.title) || 0;
-                    const barY: number = yMax - barHeight;
-                    
+                {freqsBg.map((d: Datum, i: number) => {
+                    const gap: number = 2.5;
+                    const barWidth: number = 20;
+                    const freqBarHeight: number = yMax - frequencyScale(d.normalizedFreq);
+                    const uniqBarHeight: number = yMax - uniquesScale(unique(d)/maxFreq); 
+                    const freqBarX: number = slugScale(d.title) || 0;
+                    const uniqBarX: number = freqBarX + barWidth + gap
+                    const freqBarY: number = yMax - freqBarHeight;
+                    const uniqBarY: number = yMax - uniqBarHeight;
+
+                    const barHeight = i%2===0 ? freqBarHeight : uniqBarHeight
+                    const barX = i%2===0 ? freqBarX : uniqBarX
+                    const barY = i%2===0 ? freqBarY : uniqBarY
+                    const fill = i%2===0 ? GREEN : WHITE
                     return (
                         <Bar
-                            key={`bar-${unique.title}`}
+                            key={`freq-bar-${d.title}`}
                             x={barX + margin.left/2}
                             y={barY}
                             width={barWidth}
                             height={barHeight}
-                            fill={GREEN}
+                            fill={fill}
                             fillOpacity={0.4}
                             onMouseMove={(event) => {
                                 if(tooltipTimeout) clearTimeout(tooltipTimeout); 
@@ -157,16 +237,16 @@ const CustomChart = ({
                                 if(!coords) return; 
                     
                                 const top: number = coords?.y || 0
-                                const left: number = (barX || 0) + barWidth / 2
+                                const left: number = barX + barWidth / 2
                                 showTooltip({
-                                  tooltipData: { unique },
-                                  tooltipTop: top,
-                                  tooltipLeft: left
+                                    tooltipTop: top,
+                                    tooltipLeft: left,
+                                    tooltipData: formatTooltipProps(d,i)
                                 });
                             }}
                             onMouseLeave={() => {
-                                tooltipTimeout = window.setTimeout(() => {
-                                hideTooltip();
+                                    tooltipTimeout = window.setTimeout(() => {
+                                    hideTooltip();
                                 }, 300);
                             }}
                         />
@@ -177,9 +257,9 @@ const CustomChart = ({
                 top={yMax + margin.top}
                 scale={slugScale}
                 tickFormat={formatSlug}
-                stroke={WHITE}
-                tickStroke={WHITE}
+                stroke='transparent'
                 label={'Slugs'}
+                hideTicks
                 tickLabelProps={() => ({
                     fill: WHITE,
                     fontSize: 10,
@@ -187,7 +267,7 @@ const CustomChart = ({
                     textAnchor: 'middle',
                     lineHeight: 10,
                     textTransform: "lowercase",
-                    opacity: 0.5
+                    opacity: 1.0
                 })}
             />
             <AxisLeft
@@ -216,20 +296,23 @@ const CustomChart = ({
                     top={tooltipTop}
                     left={tooltipLeft}
                     style={tooltipStyles}
-                > 
-                    <Box css={{ minWidth: '175px', maxWidth: '225px', bc: 'white', br: '$1', padding: '$1' }}>
-                        <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'flex-start', gap: '$1' }}>
-                            <Flex css={{ fd: 'row', jc: 'space-between', ai: 'flex-start', gap: '$2' }}>
-                                <Text size='1'> 
-                                    {slug(tooltipData.unique).substring(0,15)}{slug(tooltipData.unique).length > 15 ? '..' : ''} 
-                                </Text>
-                                <Text size='1'> 
-                                    Unique Visits: {tooltipData.unique.score} 
-                                </Text> 
-                            </Flex>
-                            <Text size='1'> 
-                                First View: {format(firsts[slug(tooltipData.unique)], 'hourdaymin')} 
-                            </Text>
+                >  
+                    <Box css={{ width: '225px', height: '150px', br: '$1', padding: '$1' }}>
+                        <Flex css={{ width: '100%', fd: 'column', jc: 'flex-start', ai: 'flex-start', gap: '$1' }}>
+                            {Object.entries(tooltipData).map((d,i) => {
+                                if(!d[1]) return null; 
+                                if(d[0]==='visitorIps') return <VisitorIpsList uniques={uniques} ips={d[1]} slug={slug(d)} /> 
+                            
+                                return (
+                                
+                                    <Flex key={i} css={{ width: '100%', fd: 'row', jc: 'space-between', ai: 'flex-start', gap: '$1' }}> 
+                                        <Text size='1' css={{ mb: i===0? '$2' : 0}}> 
+                                            {i===0 || !tooltipLabels[d[0]] ? '' : `${tooltipLabels[d[0]]}`} 
+                                        </Text>
+                                        <Text size='1'> {d[1]} </Text>
+                                    </Flex>
+                                );
+                            })}
                         </Flex>
                     </Box>
                 </TooltipInPortal>
@@ -238,15 +321,18 @@ const CustomChart = ({
     );
 }
 
-const UniqueBars = ({ darkMode }) => {
 
-    const { uniques, firsts, loading, error } = useUniques(); 
+const GroupedBars = ({ darkMode }) => {
 
-    if(loading) return <Loading /> 
-    if(!uniques) return <p> No data to show! </p> 
-    if(error) return <p> error! </p>
+    const { views, vloading, vError } = useUserRankings('freqs'); 
+    const { uniques, uloading, uError } = useUserRankings('uniques')
 
-    let topUniques: any[] = uniques?.length ? uniques.slice(0,8) : []
+    if(uloading || vloading) return <Loading />  
+    if(uError || vError) return <p> error! </p>
+    if(!views && !uniques) return <p> No data to show! </p>
+
+    let freqs: any[] = views.frequency?.length ? views.frequency.sort((a,b)=>b.score-a.score).slice(0,8) : []
+   
     return (
         <VisxParentSizeWrapper>
             <ParentSize>
@@ -254,9 +340,9 @@ const UniqueBars = ({ darkMode }) => {
                     <CustomChart 
                         height={height}
                         width={width}
-                        uniques={topUniques}
+                        freqs={freqs}
+                        uniques={uniques}
                         darkMode={darkMode}
-                        firsts={firsts}
                     /> 
                 )}
             </ParentSize>
@@ -264,4 +350,4 @@ const UniqueBars = ({ darkMode }) => {
     )
 }
 
-export default UniqueBars
+export default GroupedBars

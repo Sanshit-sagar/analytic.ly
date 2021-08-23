@@ -16,7 +16,6 @@ export async function getViewsForSlug(slug: string): Promise<number> {
 
 export async function getClickstreamForSlug(slug: string, limit?:number): Promise<any[]> {
     const clickstream = await redis.lrange(`clickstream.slug.${sanitizeSlug(slug)}`, 0, -1); 
-    // TODO: add limit feature for clickstream 
     return formatClickstream(clickstream)
 }
 
@@ -35,23 +34,11 @@ export async function getUniqueVisitorsForSlug(slug: string, limit?: number): Pr
     }    
 }
 
-
 export async function getUniqueVisitorsFromSlugs(userSlugsWithScores: { props: string[], rankings: SlugRankings[] } ): Promise<any> {
-    const slugsToFetch: string[] = [];
-    console.log(JSON.stringify(userSlugsWithScores)); 
-    console.log('Checkpoint 1 ');
-
-    userSlugsWithScores?.rankings.map((sr: SlugRankings, _: number) => {
-        console.log(JSON.stringify(sr));
-        slugsToFetch.push(sr.title);
-    }) ?? [];
-
-    console.log(`%%%%%%%%%%%%%%${JSON.stringify(slugsToFetch)}`)
-    console.log('Checkpoint 2 ');
-
-
-    let userUniquesBySlug: any = {}; 
+    let slugsToFetch: string[] = [];
     let totalUniqueViews: number = 0;
+
+    let userUniquesBySlug: any = userSlugsWithScores?.rankings.map((sr: SlugRankings, _: number) => slugsToFetch.push(sr.title)) ?? [];
 
     slugsToFetch.map(async function(stf: string, _) {
         let uniqueViews: number = await redis.zcard(`slug.${sanitizeSlug(stf)}.clickcount`);
@@ -59,8 +46,10 @@ export async function getUniqueVisitorsFromSlugs(userSlugsWithScores: { props: s
         totalUniqueViews += uniqueViews; 
     }); 
    
-    console.log(`**************${JSON.stringify(userUniquesBySlug)}`); 
-    return { viewsByUniques: {...userUniquesBySlug}, total: totalUniqueViews };
+    return { 
+        viewsByUniques: {...userUniquesBySlug},
+        total: totalUniqueViews 
+    };
 }
 
 

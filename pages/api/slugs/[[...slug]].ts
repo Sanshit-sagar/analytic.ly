@@ -6,8 +6,14 @@ import {
     getViewsForSlug,
     getClickstreamForSlug,
     getUniqueViewsForSlug,
-    getUniqueVisitorsForSlug,
+    getUniqueVisitorsForSlug
 } from '../../../lib/redis/slugs'
+import { 
+    getUniqueIpsForSlug,
+    getRankedUniqueIpsForSlug 
+} from '../../../lib/redis/users'
+
+const BAD_REQUEST = 'BADLY FORMED REQUEST'
 
 export default getHandler()
     .get('/api/slugs/:slug/views', async (req: NextApiRequestExtended, res: NextApiResponse) => {
@@ -58,5 +64,35 @@ export default getHandler()
         } else {
             res.status(403).json({ error: 'BAD_REQUEST_INVALID_SLUG' })
         }
-    }); 
+    })
+    .get('/api/slugs/:slug/unique/ips', async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        let slug: string = req.params.slug
+
+        if(slug) {
+            try {
+                slug = slug.startsWith('/') ? slug : `/${slug}`
+                let uniqueIps: string[] = await getUniqueIpsForSlug(slug);
+                res.status(200).json({ uniqueIps }); 
+            } catch(error) {
+                res.status(500).json({ error: `${error.message}`})
+            }
+        } else {
+            res.status(403).json({ error: BAD_REQUEST })
+        }
+    })
+     .get('/api/slugs/:slug/unique/ips/scores', async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        let slug: string = req.params.slug
+
+        if(slug) {
+            try {
+                slug = slug.startsWith('/') ? slug : `/${slug}`
+                let rankedUniqueIps: string[] = await getRankedUniqueIpsForSlug(slug);
+                res.status(200).json({ rankedUniqueIps }); 
+            } catch(error) {
+                res.status(500).json({ error: `${error.message}`})
+            }
+        } else {
+            res.status(403).json({ error: BAD_REQUEST })
+        }
+    })
    

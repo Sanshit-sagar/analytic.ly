@@ -12,8 +12,7 @@ export default getHandler()
     .get('/api/metrics/user/:email/clickstream/:time/:unit', async (req: NextApiRequestExtended, res: NextApiResponse) => {
         const time: string = req.params.time
         const unit: string = req.params.unit
-        // const isAsc: boolean = true 
-
+    
         let multiplier: number = (unit==='mins') ? 60*1000 : unit==='secs' ? 1000 : unit==='hours' ? 60*60*1000 : -1; 
 
         if(time && unit && (unit==='hours' || unit==='mins' || unit==='secs') && multiplier!==-1) {
@@ -115,6 +114,7 @@ export default getHandler()
         const interval: string = req.params.interval
         
         let range: number[] = getTicksInRange(start, end, interval, 'hourminsec');
+        
 
         res.status(200).json({ 
             range,
