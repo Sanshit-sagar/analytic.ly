@@ -1,0 +1,23 @@
+import React from 'react'
+
+import { useClickHistoryForUser } from '../../hooks/useClicks'
+
+
+export type TimeStamp = number;
+export type ClickScore = number;
+
+export interface GetClickHistory {
+    clicks?: [TimeStamp, ClickScore][];
+};
+
+const CLICK_HISTORY_CHART_ID = 'CLICK_HISTORY'
+
+
+
+
+
+
+
+
+
+

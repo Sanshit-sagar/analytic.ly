@@ -5,7 +5,7 @@ export const DashboardDisplayBox = styled('div', {
     fd: 'column', 
     jc: 'flex-start', 
     ai: 'flex-start', 
-    margin: '$1'
+    margin: '$1',
     br: '$2',
 }); 
 

@@ -1,0 +1,18 @@
+import React, { useState } from 'react';
+import { darkTheme, theme as lightTheme } from '../stitches.config'
+import Timeseries from '../components/Timeseries' 
+import { StyledAppContainer } from '../primitives/Shared';
+
+const Home = () => {
+    const [darkMode, setDarkMode] = useState(true)
+    
+    const toggleDarkMode = () => darkMode ? setDarkMode(false) : setDarkMode(true);
+
+    return (
+        <StyledAppContainer}>
+            <Timeseries />
+        </StyledAppContainer>
+    );
+}
+
+export default Home;

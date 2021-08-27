@@ -1,0 +1,6 @@
+interface 
+
+
+export interface TimeseriesChartProps {
+
+}
