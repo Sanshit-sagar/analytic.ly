@@ -1,6 +1,0 @@
-interface 
-
-
-export interface TimeseriesChartProps {
-
-}
