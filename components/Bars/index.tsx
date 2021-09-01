@@ -8,10 +8,10 @@ import { scaleLinear, scaleBand } from '@visx/scale'
 import { localPoint } from '@visx/event'
 
 import Loading from '../Loading'
-import { Box } from '../../primitives/Box'
+// import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
-import { VisxParentSizeWrapper } from '../../primitives/Shared'
+import { VisxParentSizeWrapper, TooltipWrapper } from '../../primitives/Shared'
 import ParentSize from '@visx/responsive/lib/components/ParentSize'
 import { 
     useTooltip, 
@@ -20,13 +20,15 @@ import {
 } from "@visx/tooltip"
 
 import { useUserRankings } from '../../hooks/useClicks'
+
 import { useAtom } from 'jotai'
 import { darkModeAtom } from '../../pages/index'
 
 const DEFAULT_MARGIN  = { top: 20, bottom: 50, left: 30, right: 50 };
 const colors: string[] = ['#33ffaa', '#109CF1', '#a12' ]
-const BLACK = 'rgba(50,50,50, 1.0)'
-const WHITE = 'rgba(255,255,255,1.0)'
+const BLACK = 'rgba(50,50,50,0.8)'
+const WHITE = 'rgba(255,255,255,0.8)'
+const BLUE = '#04002b'
 const GREEN = colors[0]
 
 const animationTrajectory = 'center'
@@ -35,7 +37,6 @@ const tooltipStyles = {
     ...defaultStyles,
     minWidth: 175,
     backgroundColor: '$canvas',
-    color: BLACK,
     zIndex: 4 
 };
 const tooltipLabels = {
@@ -81,33 +82,32 @@ interface Datum {
 }
 
 let tooltipTimeout: number;
-
-interface VipsListProps {
-    uniques: string[]; 
-    ips: string[]; 
-    slug: string;
-};
-const BLUE = '#04002b'
-
-const VisitorIpsList: React.FC<VipsListProps> = ({ uniques, ips, slug }) => {
-
-    return (
-        <Box>
-            <Text size='1' css={{ textDecoration: 'underline', textDecorationColor: GREEN}}> Visitor IPs: </Text>
-            <Flex css={{ fd: 'column', jc: 'flex-end', ai: 'flex-start' }}>
-                {ips.map((ip,_) => {
-                    return (
-                        <Flex>
-                            <Text size='1'> {ip.substring(0,25)} </Text> 
-                            <Text size='1'> {JSON.stringify(uniques[slug])} </Text>
-                        </Flex>
-                    );
-                })}
-            </Flex> 
-        </Box>
-    )
-}
-
+// 
+// interface VipsListProps {
+    // uniques: string[]; 
+    // ips: string[]; 
+    // slug: string;
+// };
+// 
+// const VisitorIpsList: React.FC<VipsListProps> = ({ uniques, ips, slug }) => {
+// 
+    // return (
+        // <Box>
+            {/* <Text size='1' css={{ textDecoration: 'underline', textDecorationColor: GREEN}}> Visitor IPs: </Text> */}
+            {/* <Flex css={{ fd: 'column', jc: 'flex-end', ai: 'flex-start' }}> */}
+                {/* {ips.map((ip,_) => { */}
+                    // return (
+                        // <Flex>
+                            {/* <Text size='1'> {ip.substring(0,25)} </Text>  */}
+                            {/* <Text size='1'> {JSON.stringify(uniques[slug])} </Text> */}
+                        {/* </Flex> */}
+                    // );
+                // })}
+            {/* </Flex>  */}
+        {/* </Box> */}
+    // )
+// }
+// 
 const BarChart = ({  
     width = 300, 
     height = 300, 
@@ -145,7 +145,7 @@ const BarChart = ({
     const unique = (d: Datum) => uniques[slug(d)].rankings.length
     const uniqueNormal = (d: Datum) => `${Math.round((unique(d)/Math.max(maxFreq, maxUnique))*100)}%`;
     const uniqueRank = (i: number) => (i-1)/2;
-    const visitorIps: (d: Datum) => string[] = (d: Datum) => uniques[slug(d)].rankings.map((ranking: any, _: number) => ranking.slug)
+    // const visitorIps: (d: Datum) => string[] = (d: Datum) => uniques[slug(d)].rankings.map((ranking: any, _: number) => ranking.slug)
 
     const slugScale = scaleBand<string>({
         domain: freqs.map(slug),
@@ -212,9 +212,9 @@ const BarChart = ({
                 yScale={frequencyScale}
                 width={width}
                 height={height}
-                stroke={WHITE}
+                stroke={!darkMode ? WHITE : BLACK}
                 strokeDasharray="5 5"
-                strokeOpacity={0.1}
+                strokeOpacity={0.25}
             />
             <Group 
                 top={margin.top} 
@@ -234,6 +234,7 @@ const BarChart = ({
                     const barX = i%2===0 ? freqBarX : uniqBarX
                     const barY = i%2===0 ? freqBarY : uniqBarY
                     const fill = i%2===0 ? GREEN : darkMode ? BLUE : WHITE
+                    
                     return (
                         <Bar
                             key={`freq-bar-${d.title}`}
@@ -285,7 +286,7 @@ const BarChart = ({
             <AxisLeft
                 left={margin.left / 2}
                 scale={frequencyScale}
-                tickFormat={formatFrequency}
+                tickFormat={(value: number) => Math.round(value * maxFreq).valueOf()}
                 stroke={WHITE}
                 tickStroke={WHITE}
                 label={'Freqs'}
@@ -309,19 +310,16 @@ const BarChart = ({
                     left={tooltipLeft}
                     style={tooltipStyles}
                 >  
-                    <Box css={{ bc: '$canvas', width: '250px', height: '75px', br: '$1', padding: '$1' }}>
-                        <Flex css={{ width: '100%', fd: 'column', jc: 'flex-start', ai: 'flex-start', gap: '$1'}}>
-                            
-                            {Object.entries(tooltipData).map((d: [string, string | number | string[]], i: number) => {
-                                return (
-                                    <Flex key={i} css={{ width: '100%', fd: 'row', jc: 'space-between', ai: 'flex-start' }}> 
-                                        <Text size='1'> {tooltipLabels[`${d[0]}`]} </Text>
-                                        <Text size='1'> {d[1]} </Text>
-                                    </Flex>
-                                );
-                            })}
-                        </Flex>
-                    </Box>
+                    <TooltipWrapper>
+                        {Object.entries(tooltipData).map((d: [string, string | number | string[]], i: number) => {
+                            return (
+                             <Flex key={i} css={{ width: '100%', fd: 'row', jc: 'space-between', ai: 'flex-start' }}> 
+                                 <Text size='1'> {tooltipLabels[`${d[0]}`]} </Text>
+                                 <Text size='1'> {d[1]} </Text>
+                             </Flex>
+                            );
+                        })}
+                    </TooltipWrapper>
                 </TooltipInPortal>
             )}
         </div>

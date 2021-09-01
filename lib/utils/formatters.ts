@@ -150,6 +150,7 @@ export function formatClick(ufmtClick: any) {
             location: formatLocation(reqInfo.city, reqInfo.postalCode, reqInfo.metroCode),
             geodata: formatCoordinate(reqInfo.longitude, reqInfo.latitude, reqInfo.timezone).coordinatesStr, 
             ipAddress: formatIp(reqInfo.ip),
+            ip: reqInfo.ip,
             tlsVersion: reqInfo.tlsVersion,
             httpProtocol: reqInfo.httpProtocol,
             asn: reqInfo.asn,

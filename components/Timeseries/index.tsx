@@ -1,18 +1,24 @@
 import React from 'react';
-import { Atom, atom, useAtom } from 'jotai'
 
-import { FieldSet } from '../../compositions/FieldSet'
 import { Select } from '../../compositions/Select'
+import { FieldSet } from '../../compositions/FieldSet'
 import PresetToggleButtons from '../../compositions/ToggleGroup'
 
-import { SelectionOption } from './interfaces'
-
 import { getValueInMillis } from '../../lib/utils/d3time'
-import MarketProvider from '../../store/MarketProvider'
-
 import { ToolbarButtonGroup } from '../../primitives/Toolbar'
 
 import ClickHistory from './ClickHistory'
+import { SelectionOption } from './interfaces'
+import MarketProvider from '../../store/MarketProvider'
+
+import { 
+    quantityAtom, 
+    timeAgoAtom, 
+    openTimeAgoAtom, 
+    tickSizeAtom, 
+    tickSizeActive 
+} from '../../pages/index'
+import { Atom, atom, useAtom } from 'jotai'
 
 const timeAgoOptions: SelectionOption[] = [
     { id: 0, label: 'millisecond' },
@@ -32,13 +38,6 @@ const tickSizeOptions: SelectionOption[] = [
     { id: 4, label: 'week' },
     { id: 5, label: 'month' },
 ];
-
-export const quantityAtom: Atom<number>  = atom(2)
-export const timeAgoAtom: Atom<number> = atom(5)
-export const openTimeAgoAtom: Atom<boolean> = atom(false)
-export const tickSizeAtom: Atom<number> = atom(3)
-export const tickSizeActive: Atom<boolean> = atom(false)
-
 
 function millify(timeDiffStr: string) {
     return getValueInMillis(timeDiffStr) || -1;
@@ -64,7 +63,6 @@ export const numIntervalsAtom: Atom<number> = atom((get) => {
 export const timeAgoStrAtom = atom((get) => timeAgoOptions[get(timeAgoAtom)].label)
 export const tickSizeStrAtom = atom((get) => tickSizeOptions[get(tickSizeAtom)].label)
 export const isValidAtom = atom((get) => get(numIntervalsAtom)>0 ? true : false)
-
 
 export const Quantity = () => {
     return (

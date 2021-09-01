@@ -106,7 +106,6 @@ const Controller = () => {
             <TimeSelectionGroup />
             <ToolbarSeparator />
             <Presets />
-            <ToolbarSeparator />
         </Toolbar>
     );
 }

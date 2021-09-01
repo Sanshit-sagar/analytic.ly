@@ -8,8 +8,7 @@ import {
 
 import {
     AXIS_LEFT_TICK_LABEL_PROPS,
-    AXIS_BOTTOM_TICK_LABEL_PROPS,
-    AXIS_COLOR
+    AXIS_BOTTOM_TICK_LABEL_PROPS
 } from './constants'
 
 import { 
@@ -55,7 +54,8 @@ const AreaChart:React.FC<AreaChartProps> = ({
     if(width < 10) return null; 
 
     const [darkMode] = useAtom(darkModeAtom)
-    const LABEL_COLOR = darkMode ? 'rgba(255,255,255,1.0)' :'rgba(0,0,0,1.0)'
+
+    const LABEL_COLOR = 'red'
     const getDate = (d: Datum): ClickDate => d.clickdate 
     const getClickScore = (d: Datum): ClickScore => d?.clickscore || 0
     
@@ -81,7 +81,7 @@ const AreaChart:React.FC<AreaChartProps> = ({
                     <AnimatedGridRows
                         key={`gridrows-${ANIMATION_TRAJECTORY}`}
                         scale={yScale}
-                        stroke={darkMode ? 'rgba(0,20,255,0.2)' : 'rgba(255,255,255,0.15)'}
+                        stroke={!darkMode ? 'rgba(255,255,255,0.075)' :'rgba(0,0,0,0.075)'}
                         width={width}
                         numTicks={2*NUM_TICKS.x}
                         animationTrajectory={ANIMATION_TRAJECTORY}
@@ -89,7 +89,7 @@ const AreaChart:React.FC<AreaChartProps> = ({
                     <AnimatedGridColumns
                        key={`gridcolumns-${ANIMATION_TRAJECTORY}`}
                        scale={xScale}
-                       stroke={darkMode ? 'rgba(0,20,255,0.2)' : 'rgba(255,255,255,0.15)'}
+                       stroke={!darkMode ? 'rgba(255,255,255,0.075)' :'rgba(0,0,0,0.075)'}
                        height={yMax}
                        numTicks={2*NUM_TICKS.y}
                        animationTrajectory={ANIMATION_TRAJECTORY}
@@ -130,8 +130,8 @@ const AreaChart:React.FC<AreaChartProps> = ({
                     orientation={LEFT}
                     left={0}
                     scale={yScale}
-                    stroke={AXIS_COLOR}
-                    tickStroke={AXIS_COLOR}
+                    stroke={LABEL_COLOR}
+                    tickStroke={LABEL_COLOR}
                     numTicks={5}
                     tickLabelProps={() => AXIS_LEFT_TICK_LABEL_PROPS}
                     animationTrajectory={ANIMATION_TRAJECTORY}

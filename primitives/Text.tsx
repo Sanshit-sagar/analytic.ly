@@ -232,7 +232,7 @@ export const StyledText = styled(DEFAULT_TAG, {
     },
   ],
   defaultVariants: {
-    size: '3',
+    size: '1',
     variant: 'contrast',
   },
 });

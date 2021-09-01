@@ -14,6 +14,8 @@ export const getThemedBottomAxis = ({ darkMode }: { darkMode: boolean }) => {
 export const AXIS_BOTTOM_TICK_LABEL_PROPS = {
     textAnchor: 'middle' as const,
     fontFamily: 'Arial',
+    fontColor: 'red',
+    color: 'red',
     fontSize: 10,
 };
 
@@ -22,5 +24,7 @@ export const AXIS_LEFT_TICK_LABEL_PROPS = {
     dy: '0.25em',
     fontFamily: 'Arial',
     fontSize: 10,
+    fontColor: 'red',
+    color: 'red',
     textAnchor: 'end' as const,
 };

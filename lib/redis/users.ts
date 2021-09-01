@@ -165,6 +165,17 @@ export async function getStatisticsForUser(email: string): Promise<{ name: strin
       }
 }
 
+export async function getUserResponses(email: string): Promise<any[]> {
+    const clickstream = await redis.lrange(`clickstream.user.${email}`, 0, -1);
+    const userResponses: any[] = [];
+    
+    clickstream.map((click: string, i: number) => {
+        let data: any = JSON.parse(click)
+        userResponses.push(data.responseHeaders)
+    });
+
+    return userResponses;
+}
 
 export async function getUniqueIpsForSlug(slug: string): Promise<string[]> {
     const uniqueIps = await redis.zrange(`ip.by.slug.${slug}`, 0, -1); 

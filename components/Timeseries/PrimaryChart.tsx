@@ -11,19 +11,16 @@ import {
     PrimaryChartProps, 
     ClickDate, 
     ClickScore,
-    GraphDetails
+    // GraphDetails
 } from './interfaces'
-
+import { TooltipWrapper } from '../../primitives/Shared'
 import { 
     useTooltip, 
     TooltipWithBounds,
-    defaultStyles as defaultToopTipStyles 
+    defaultStyles as DEFAULT_TOOLTIP_STYLES 
 } from '@visx/tooltip'
 
 import { Text } from '../../primitives/Text'
-import { Flex } from '../../primitives/Flex'
-import { Box } from '../../primitives/Box'
-
 import { MarketContext } from '../../store/MarketProvider' 
 import { XAxisLabel, YAxisLabel } from './Annotation'
 import AreaChart from './AreaChart'
@@ -32,7 +29,6 @@ const getDate = (d: Datum): ClickDate => d.clickdate
 const getClickScore = (d: Datum): ClickScore => d?.clickscore || 0
 const getFormatValue = (d: Datum): string => {return `${d.clickscore}`;}
 const bisectDate = bisector<Datum, Date>((d: Datum) => new Date(d.clickdate)).left
-
 
 const GRADIENT_ID = 'brush_gradient';
 export const accentColor = 'rgba(50,250,150,1.0)';
@@ -43,7 +39,6 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
     height,
     width,
     data,
-    details,
     loading,
     error,
     margin={ top: 0, left: 0, bottom: 20, right: 0 },
@@ -80,8 +75,7 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
       });
     }, [margin.top, yMax, data]);
 
-  
-  const handleTooltip = useCallback((event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+    const handleTooltip = useCallback((event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
         const { x } = localPoint(event) || { x: 0 };
         const currX = x - margin.left;
         const x0 = dateScale.invert(currX);
@@ -137,7 +131,7 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
                 end={bounds.y1}
             /> 
             <AreaChart
-                data={data}
+                data={filteredData}
                 loading={loading}
                 error={error} 
                 width={width}
@@ -177,7 +171,7 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
                     cy={tooltipTop + 1 + margin.top}
                     r={4}
                     fill="white"
-                    fillOpacity={0.5}
+                    fillOpacity={0.75}
                     stroke="white"
                     strokeOpacity={0.5}
                     strokeWidth={1}
@@ -200,18 +194,17 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
                     top={tooltipTop - 12}
                     left={tooltipLeft}
                     style={{
-                        ...defaultToopTipStyles,
-                        borderRadius: '5px',
-                        border: 'thin solid black',
+                        ...DEFAULT_TOOLTIP_STYLES,
+                        minWidth: 175,
+                        backgroundColor: '$canvas',
+                        zIndex: 4 
                     }}
                 >
-                    <Box css={{ padding: '$1', height: '50px', width: '175px', br: '$1', bc: 'white'}}>
-                        <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'center', gap: '$1'}}>
+                    <TooltipWrapper>
                             <Text size='1'> Clicks: {getFormatValue(tooltipData)} </Text>
                             <Text size='1'> Timestamp: {new Date(tooltipData.timestamp).toLocaleString()} </Text>
                             <Text size='1'> FmtTime: {tooltipData.clickfmttime} </Text>
-                        </Flex>        
-                    </Box>
+                    </TooltipWrapper>   
                 </TooltipWithBounds>
             )}
         </>

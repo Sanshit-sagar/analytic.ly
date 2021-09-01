@@ -144,8 +144,8 @@ export const useUserStatistics = () => {
 
     return {
         statistics: data?.userStatistics || null,
-        loading: !data && !error,
-        error
+        statsLoading: !data && !error,
+        statsError: error
     }
 }
 

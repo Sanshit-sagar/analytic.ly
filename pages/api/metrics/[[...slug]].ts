@@ -3,7 +3,7 @@ import { NextApiResponse } from 'next'
 import getHandler, { NextApiRequestExtended } from '../../../lib/utils/helpers'
 import { generateTimeseries } from '../../../lib/utils/xyseries'
 import { generateVoronoi } from '../../../lib/redis/users'
-import { getDoubleEndedClickstream } from '../../../lib/redis/clicks'
+import { getClickstream, getDoubleEndedClickstream } from '../../../lib/redis/clicks'
 import { getTicksInRange, getRangeBoundaries, getLabelsFromBounds } from '../../../lib/utils/d3time'
 import { calibrateCache } from '../../../lib/redis/admin'
 import { merge } from '../../../lib/utils/mergers'
@@ -13,9 +13,9 @@ export default getHandler()
         const time: string = req.params.time
         const unit: string = req.params.unit
     
-        let multiplier: number = (unit==='mins') ? 60*1000 : unit==='secs' ? 1000 : unit==='hours' ? 60*60*1000 : -1; 
+        let multiplier: number = (unit.startsWith('month')) ? 1000*60*60*24*30 : (unit==='week') ?  1000*60*60*24*7 : (unit.startsWith('day')) ? 1000*60*60*24 : (unit==='hour') ? 1000*60*60 : (unit==='mins') ? 60*1000 : unit==='secs' ? 1000 : unit==='hours' ? 60*60*1000 : -1; 
 
-        if(time && unit && (unit==='hours' || unit==='mins' || unit==='secs') && multiplier!==-1) {
+        if(time && unit && multiplier!==-1) {
             let startTimestamp: number =  new Date().getTime() - (parseInt(`${time}`) * multiplier)
             let endTimestamp: number = new Date().getTime()
 
@@ -150,5 +150,19 @@ export default getHandler()
             }
         } catch(error) {
             res.status(500).json({ error: `FAILURE: ${error.message}` });
+        }
+    })
+    .get('/api/metrics/user/:email/clickstream',  async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        const email = req.params.email
+
+        if(email) {
+            try {
+                 const clicks = await getClickstream(email);
+                 res.status(200).json({ clicks })
+            } catch(error) {
+                 res.status(500).json({ error: `${error.message}`})
+            }
+        } else {
+            res.status(403).json({ error: 'INVALID EMAIL' })
         }
     });

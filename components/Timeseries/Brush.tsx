@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 
 import useDims from '../../hooks/useDims'
 import { MarketContext } from '../../store/MarketProvider'
-import { Text } from '../../primitives/Text'
-import { Box } from '../../primitives/Box'
+
+import { CentralDataVisualizer } from '../../primitives/Shared'
 import { BrushChartProps } from './interfaces'
+
 import PrimaryChart from './PrimaryChart'
 import SecondaryChart from './SecondaryChart'
 import Controller from './Controller'
 
-export const BACKGROUND = '#04002b';
+
 const Brush = ({ loading, error, mappedData, details }: BrushChartProps) => {
     const { filteredDataState: { filteredData } } = useContext(MarketContext);
 
@@ -28,7 +29,7 @@ const Brush = ({ loading, error, mappedData, details }: BrushChartProps) => {
 
 
     return (
-        <Box ref={gridItemRef} css={{ backgroundColor: 'transparent', height: '600px', width: '1000px', border: 'thin solid', borderColor: '$accent', br: '$3', margin: '$2' }}>
+        <CentralDataVisualizer ref={gridItemRef}>
             <Controller /> 
             <PrimaryChart
                 data={filteredData}
@@ -55,10 +56,10 @@ const Brush = ({ loading, error, mappedData, details }: BrushChartProps) => {
                     top: 0,
                     right: 16,
                     bottom: 24,
-                    left: 48,
+                    left: 30,
                 }}
             />
-        </Box>
+        </CentralDataVisualizer>
     )
 }
 

@@ -1,6 +1,8 @@
 import redis from './index'
 import parser from 'ua-parser-js'
 
+import { getUserResponses } from './users'
+
 interface UncachedDetailsProps {
     owner: string;
     slug: string; 
@@ -62,6 +64,42 @@ export async function calibrateCache(): Promise<CacheResults> {
         successes 
     }; 
 }
+
+export async function cacheResponseHeaders(email: string) {
+    const responseFields: any[] = [];
+    const responseHeaders = await getUserResponses(email)
+    const cacheStatusFreqs = {};
+
+    responseHeaders.map((responseHeader, _) => {
+        const cacheStatus: string = responseHeader['x_cache'] || responseHeader['cf_cache_status'] || 'N/A'
+        const responseTime = responseHeader['responseTime'] || 'N/A'
+        const responseStatus = responseHeader['responseStatus'] || 'N/A'
+        // const cfCacheStatus=  || 'N/A'
+        const cacheControl = responseHeader['cacheControl'] || 'N/A'
+        const contentType = responseHeader['content_type'] || 'N/A'
+        const server = responseHeader['server'] || 'N/A'
+        const destination = responseHeader['destination'] || 'N/A'
+
+        if(!cacheStatusFreqs[cacheStatus]) {
+            cacheStatusFreqs[cacheStatus] = 0;
+        }
+        cacheStatusFreqs[cacheStatus]++
+
+        responseFields.push({ 
+            cacheStatus, 
+            responseTime, 
+            cacheControl,
+            responseStatus, 
+            // cfCacheStatus, 
+            contentType, 
+            server, 
+            destination 
+        }); 
+    });
+
+    return { cacheStatusFreqs };
+}
+
 
  async function updateCache({ 
      owner, 

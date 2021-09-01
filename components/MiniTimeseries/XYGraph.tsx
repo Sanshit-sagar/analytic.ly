@@ -16,9 +16,9 @@ import { ThemeConfig } from '@visx/xychart/lib/theme/buildChartTheme'
 import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
-import { VisxParentSizeWrapper } from '../../primitives/Shared'
 
-import { GraphSkeleton } from '../Skeletons'
+import { useAtom } from 'jotai'
+import { darkModeAtom } from '../../pages/index'
 
 import { format } from '../../lib/utils/d3time'
 import { useClickHistoryForUser} from '../../hooks/useClicks'
@@ -55,7 +55,6 @@ export interface TimeseriesProps {
     interval: string;
     range: string;
     amount: number;
-    darkMode: boolean;
 }
 
 const emptyDatum: Datum = {
@@ -189,11 +188,12 @@ const darkTheme = buildChartTheme(({
     background:  'rgba(255,255,255,1.0)'
 } as unknown) as ThemeConfig);
 
-const Timeseries = ({ amount, range, interval, darkMode }: TimeseriesProps) => {
-  
+const XYGraph = ({ amount, range, interval }: TimeseriesProps) => {
+    const [darkMode] = useAtom(darkModeAtom);
+
     const { clicks, minTimestamp, loading, error } = useClickHistoryForUser(amount, range, interval);
 
-    if(loading) return <GraphSkeleton />  
+    if(loading) return <p> loading... </p>  
     if(error) return <p> error! </p>
 
     const dataA: Datum[] = new Array(clicks.length).fill(null).map((_, i) => ({
@@ -206,7 +206,7 @@ const Timeseries = ({ amount, range, interval, darkMode }: TimeseriesProps) => {
     const BACKGROUND = !darkMode ? "rgba(50,50,50, 1.0)" : 'rgba(255,255,255,1.0)'
 
     return (
-        <VisxParentSizeWrapper>
+        <>
             <ParentSize> 
                 {({ width, height }) => {
                     return (
@@ -223,9 +223,9 @@ const Timeseries = ({ amount, range, interval, darkMode }: TimeseriesProps) => {
                     ); 
                 }}
             </ParentSize> 
-        </VisxParentSizeWrapper> 
+        </> 
     )
 }
 
-export default Timeseries;
+export default XYGraph;
 

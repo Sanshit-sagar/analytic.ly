@@ -78,6 +78,7 @@ export const YAxisLabel = ({ height, width, start, end }: AxisLabelProps) => {
                         fontSize: '1.2em', 
                         writingMode: 'vertical-lr',
                         fontFamily: 'Arial',
+                        color: !darkMode ? 'rgba(255,255,255,1.0)' :'rgba(0,0,0,1.0)'
                     }}
                 >
                     CLICKS
