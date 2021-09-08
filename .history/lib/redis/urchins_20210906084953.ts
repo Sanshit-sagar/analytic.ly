@@ -1,0 +1,20 @@
+import redis from './index'
+
+// utm_medium=meDium234&utm_term=TErm145
+// zadd 0 medium1234:meDium1234 0 term145:TErm145
+
+export async function getAllUserUrchins(email: string) {
+    try {
+        const multiPromise = await redis.multi()
+            .zrangebylex(`urchins.medium.user.${email}`)
+            .zrangebylex(`urchins.source.user.${email}`)
+            .zrangebylex(`urchins.term.user.${email}`)
+            .zrangebylex(`urchins.medium.user.${email}`)
+            .zrangebylex(`urchins.medium.user.${email}`)
+            .exec((error: any, result: any) => {
+                if(error) {
+                    console.error(error.message)
+                } else {
+                    c
+                }
+}
