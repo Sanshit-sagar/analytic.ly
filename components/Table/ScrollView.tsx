@@ -1,28 +1,27 @@
 import { ReactNode } from 'react'
 import { styled } from '@stitches/react'
-import {  mauve, blackA } from '@radix-ui/colors'
+import {  blackA } from '@radix-ui/colors'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 
-const SCROLLBAR_SIZE = 10;
+const SCROLLBAR_SIZE = 7;
 
 const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
-  borderRadius: 4,
   overflow: 'hidden',
+  border: 'none',
 });
 
 const StyledViewport = styled(ScrollAreaPrimitive.Viewport, {
   width: '100%',
   height: '100%',
-  borderRadius: 'inherit',
+  border: 'none',
+  backgroundColor: '$panel',
 });
 
 const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
   display: 'flex',
   userSelect: 'none',
   touchAction: 'none',
-  background: '$bronze100',
   transition: 'background 160ms ease-out',
-  '&:hover': { background: blackA.blackA8 },
   '&[data-orientation="vertical"]': { width: SCROLLBAR_SIZE },
   '&[data-orientation="horizontal"]': {
     flexDirection: 'column',
@@ -32,7 +31,7 @@ const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
 
 const StyledThumb = styled(ScrollAreaPrimitive.Thumb, {
   flex: 1,
-  background: '$accent',
+  background: '$border',
   borderRadius: '$2',
   position: 'relative',
   width: 10,
@@ -63,38 +62,14 @@ const ScrollAreaCorner = StyledCorner;
 
 const Box = styled('div', {});
 
-export const ScrollView = ({ content }: { content: any }) => {
-  
-  return (
-    <Box css={{ borderRadius: '5px', backgroundColor: 'transparent' }}>
-      <ScrollArea style={{ width: '440px', height: '400px' }}>
-        <ScrollAreaViewport css={{ backgroundColor: 'transparent' }}>
-          <Box css={{ backgroundColor: 'transparent', width: '97.5%', mt: '$1', mb: '$2', py: '$2', px: '$1' }}>
-            {content}
-          </Box>
-        </ScrollAreaViewport>
-        <ScrollAreaScrollbar orientation="vertical">
-          <ScrollAreaThumb />
-        </ScrollAreaScrollbar>
-        <ScrollAreaScrollbar orientation="horizontal">
-          <ScrollAreaThumb />
-        </ScrollAreaScrollbar>
-        <ScrollAreaCorner />
-      </ScrollArea>
-    </Box>
-  );
-}
-
 export const TableScrollView = ({ content }: { content: any }) => {
   
   return (
-    <Box css={{ borderRadius: '5px' }}>
+    
       <ScrollArea style={{ width: '100%', height: '550px' }}>
 
         <ScrollAreaViewport>
-          <Box css={{ width: '100%' }}>
             {content}
-          </Box>
         </ScrollAreaViewport>
 
         <ScrollAreaScrollbar orientation="vertical">
@@ -107,7 +82,6 @@ export const TableScrollView = ({ content }: { content: any }) => {
 
         <ScrollAreaCorner />
       </ScrollArea>
-    </Box>
   );
 }
 

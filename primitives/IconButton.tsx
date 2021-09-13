@@ -19,7 +19,6 @@ const StyledIconButton = styled(DEFAULT_TAG, {
   WebkitTapHighlightColor: 'transparent',
   ml: '$1',
   mr: '$1',
-  mt: '$1',
   border: '1px solid $border',
   backgroundColor: 'transparent',
   color: '$accent',
@@ -70,20 +69,22 @@ const StyledIconButton = styled(DEFAULT_TAG, {
     variant: {
       ghost: {
         backgroundColor: 'transparent',
-        borderWidth: '0',
+        border: '1px solid $border',
+        borderRadius: '$1',
         '@hover': {
           '&:hover': {
-            backgroundColor: '$slateA3',
+            backgroundColor: '$accentHovered',
+            borderColor: '$border3',
           },
         },
         '&:focus': {
-          boxShadow: 'inset 0 0 0 1px $colors$slateA8, 0 0 0 1px $colors$slateA8',
+          boxShadow: 'inset 0 0 0 1px $accentContrast, 0 0 0 1px $accentContrast',
         },
         '&:active': {
-          backgroundColor: '$slateA4',
+          backgroundColor: '$accentFull',
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]': {
-          backgroundColor: '$slateA4',
+          backgroundColor: '$accent',
         },
       },
       raised: {

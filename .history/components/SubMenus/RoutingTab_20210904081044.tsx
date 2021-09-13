@@ -1,1 +1,0 @@
-useGloballyConsistentColors

@@ -1,3 +1,0 @@
-import redis from './index'
-
-

@@ -9,6 +9,7 @@ import { Text } from '../../primitives/Text'
 import { Flex } from '../../primitives/Flex'
 import { TextField } from '../../primitives/TextField'
 import { Label, ControlGroup } from '../../primitives/FieldSet'
+
 import { 
     FlexStartCenterRow, 
     FlexEndCenterRow,
@@ -16,10 +17,11 @@ import {
     FlexCenterCenterColumn
 } from '../../primitives/Shared'
 
-import {IUtmParameters } from './interfaces'
+import { IUtmParameters } from './interfaces'
 import { useAsyncJotai } from '../../hooks/useAsyncJotai'
 import { darkModeAtom } from '../../pages/index'
 
+import ComboBox from '../../components/ComboBox'
 
 import {
     CursorTextIcon,
@@ -89,6 +91,7 @@ type SeoOpticsEvent = React.ChangeEvent<HTMLInputElement>;
 interface ISeoParameter {
     id: string; 
     value: string;
+    atom: WritableAtom<string, React.SetStateAction<string>>;
     setter: (event: SeoOpticsEvent) => void;
 }
 
@@ -249,12 +252,11 @@ const FilterResults = ({ category, userInput, isReady, filteredUrchins }: IFilte
     )
 }
 
-interface IAsyncJotaiResults { 
-    data: null | string[]; 
-    loading: boolean; 
-    error: any | null | undefined 
-};
-
+interface IAsyncJotaiResults {
+    data: any, 
+    loading: boolean,
+    error: any | null | undefined,
+}; 
 
 const SeoParamsCacbe = () => {
     // TODO: replace with user emails
@@ -269,11 +271,11 @@ const SeoParamsCacbe = () => {
     const [content, setContent] = useAtom(seoContentAtom)
 
     const seoParams: ISeoParameter[] = [
-        { id: 'medium', value: medium, setter: (event: SeoOpticsEvent) => setMedium(event.currentTarget.value)},
-        { id: 'term', value: term, setter: (event: SeoOpticsEvent) => setTerm(event.currentTarget.value)},
-        { id: 'source', value: source,  setter: (event: SeoOpticsEvent) => setSource(event.currentTarget.value)},
-        { id: 'campaign', value: campaign, setter: (event: SeoOpticsEvent) => setCampaign(event.currentTarget.value)},
-        { id: 'content', value: content,  setter: (event: SeoOpticsEvent) => setContent(event.currentTarget.value)}
+{ id: 'medium', atom: seoMediumAtom, value: medium, setter: (event: SeoOpticsEvent) => setMedium(event.currentTarget.value)},
+{ id: 'term', atom: seoTermAtom, value: term, setter: (event: SeoOpticsEvent) => setTerm(event.currentTarget.value)},
+{ id: 'source', atom: seoSourceAtom, value: source, setter: (event: SeoOpticsEvent) => setSource(event.currentTarget.value)},
+{ id: 'campaign', atom:seoCampaignAtom,value: campaign,setter: (event: SeoOpticsEvent) =>setCampaign(event.currentTarget.value)},
+{ id: 'content', atom: seoContentAtom, value: content,  setter: (event: SeoOpticsEvent) => setContent(event.currentTarget.value)}
     ];    
 
     let isReady = !loading && !error && data && data!==null
@@ -283,30 +285,36 @@ const SeoParamsCacbe = () => {
         <FlexCenterCenterColumn>
             <FlexCenterCenterRow>
                 {seoParams.map((seoParam: ISeoParameter, index: number) => {
-                    let urchinsForCategory = categorizedUrchins[seoParam.id]
+                    let urchinsForCategory = categorizedUrchins && categorizedUrchins[seoParam.id] && categorizedUrchins[seoParam.id].length ? categorizedUrchins[seoParam.id] : []
                     
                         return (
-                            <Flex css={{ fd: 'column', jc: 'center', ai: 'stretch', gap: '$1' }}>
-                                <SeoParamsInput 
-                                    seoParam={seoParam} 
+                            <Flex key={index} css={{ fd: 'column', jc: 'center', ai: 'stretch', gap: '$1' }}>
+                                <ComboBox
+                                    key={index} 
+                                    utmCategory={seoParam.id} 
+                                    utmCategoryAtom={seoParam.atom}
                                     index={index} 
+                                    initOptions={urchinsForCategory}
                                 />
-                                {urchinsForCategory?.length &&
-                                    <CategorizedUrchins 
-                                        isReady={isReady}
-                                        filteredUrchins={urchinsForCategory.filter((urchin: string) => 
-                                            startsWith(urchin, seoParams[index].value)
-                                        )}
-                                        userInput={seoParams[index].value}
-                                        category={seoParams[index].id}
-                                    />
-                                }
                             </Flex>
-                        )
-                    })}
+                        );
+                    }
+                )}
             </FlexCenterCenterRow>
         </FlexCenterCenterColumn>
     )
 }
 
 export default SeoParamsCacbe
+
+
+// {urchinsForCategory?.length &&
+    // <CategorizedUrchins 
+        // isReady={isReady}
+        // filteredUrchins={urchinsForCategory.filter((urchin: string) => 
+            // startsWith(urchin, seoParams[index].value)
+        // )}
+        // userInput={seoParams[index].value}
+        // category={seoParams[index].id}
+    // />
+// }

@@ -3,8 +3,8 @@ import React, { useEffect} from 'react'
 import { Atom, atom } from 'jotai'
 import { atomWithStorage, useUpdateAtom } from 'jotai/utils'
 
-export const darkModeAtom = atomWithStorage('darkMode', false)
-export const themeAtom = atomWithStorage('theme', 'theme1-light')
+export const darkModeAtom = atomWithStorage('darkMode', true)
+export const themeAtom = atomWithStorage('theme', 'theme4-dark')
 export const isMountedAtom = atom<boolean>(false)
 
 export const activeRouteAtom: Atom<string> = atom('/dash')

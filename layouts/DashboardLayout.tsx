@@ -14,7 +14,7 @@ export interface IDashboardProps {
 }
 
 export const MainComponent = styled('div', {
-    bc: '$neutral', 
+    bc: 'transparent', 
     height: '600px', 
     width: '1100px', 
     maxHeight: '600px', 

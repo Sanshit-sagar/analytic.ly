@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, RefObject } from 'react'
 import { useTextField } from '@react-aria/textfield'
 
 import { 
@@ -14,7 +14,6 @@ import {
     CheckCircledIcon,
     CrossCircledIcon
 } from '@radix-ui/react-icons'
-import { RefObject } from 'react'
 
 interface IValidationProps {
     isValid: boolean;
@@ -36,24 +35,21 @@ const Validator = ({ isValid }: IValidationProps) => {
     );
 }
 
-type InputRefType = HTMLInputElement | HTMLTextAreaElement | undefined
 
 export const TextField = (props: any) => {
-    let { label } = props
-    let inputRef: RefObject<InputRefType> = useRef<InputRefType>()
-    let { labelProps, inputProps } = useTextField(props, inputRef)
+    let ref: RefObject<HTMLInputElement | HTMLTextAreaElement> = useRef<HTMLInputElement | HTMLTextAreaElement>()
+    let { labelProps, inputProps } = useTextField(props, ref)
 
     return (
         <ControlGroup>
             <Label {...labelProps}> 
-                <>{label}</>
+                <>{props.label}</>
                 <InfoCircledIcon />
             </Label>
             <LargeInput 
                 {...inputProps}
-                ref={inputRef}
+                ref={ref}
             /> 
-            <Validator isValid={props.isValid} />
         </ControlGroup>
     )
 }

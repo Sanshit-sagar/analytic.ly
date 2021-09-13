@@ -6,6 +6,7 @@ import {
     Input,
     FilterFieldset as FieldsetPrimitive 
 } from '../../../primitives/FieldSet'
+import { TextField } from '../../../primitives/TextField'
 
 import { useAtom, atom } from 'jotai'
 const globalFilterAtom = atom('')
@@ -29,7 +30,7 @@ export const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFil
 
     return (
         <FieldsetPrimitive>
-             <Input 
+             <TextField 
                 type={'text'}
                 id={`global-filter`} 
                 value={input}

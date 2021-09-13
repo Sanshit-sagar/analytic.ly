@@ -1,7 +1,0 @@
-
-
-import {
-    Collapsible,
-    CollapsibleTrigger,
-    Colla
-}

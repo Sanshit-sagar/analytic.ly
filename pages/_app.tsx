@@ -1,15 +1,17 @@
 import '../styles/globals.css'
 
-import Head from 'next/head'
-import React from 'react'
 
-import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
+import React, { ReactNode, ReactElement } from 'react'
 
 import { IdProvider } from '@radix-ui/react-id'
 import { SSRProvider } from '@react-aria/ssr'
+import { I18nProvider } from '@react-aria/i18n'
 import { Provider as JotaiProvider } from 'jotai'
+
+import { SWRConfig } from 'swr'
+
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode
@@ -19,25 +21,37 @@ type AppPropsWithLayout = AppProps & {
     Component: NextPageWithLayout
 }
 
+const SWRConfigProvider = ({ children }: { children: ReactNode }) => (
+    <SWRConfig 
+        value={{
+            revalidateOnMount: true,
+            revalidateOnFocus: true,
+            revalidateOnReconnect: true,
+            refreshWhenHidden: false,
+            refreshWhenOffline: false,
+            refreshInterval: 50000,
+            fetcher: (resource: string, init: any) => fetch(resource, init).then(res => res.json())
+        }}
+    >
+        {children}
+    </SWRConfig>
+);
+
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page)
     
-    return (
-        <>
-            <Head>
-                <title>analyticly web app</title>
-                <link rel="icon" href="/favicon.ico" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </Head>
-    
-            <SSRProvider>
-                <IdProvider>
+    return (    
+        <SSRProvider>
+            <IdProvider>
+                <I18nProvider locale={'en-US'}>
                     <JotaiProvider> 
-                        {getLayout(<Component {...pageProps} />)}
+                        <SWRConfigProvider>
+                            {getLayout(<Component {...pageProps} />)}
+                        </SWRConfigProvider>
                     </JotaiProvider>
-                </IdProvider>
-            </SSRProvider>
-        </>
+                </I18nProvider>
+            </IdProvider>
+        </SSRProvider>
     );
 }
 

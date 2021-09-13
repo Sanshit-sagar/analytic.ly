@@ -58,18 +58,14 @@ const descriptions: any = Object.values({
 });
 
 const submenus: SubMenu[] = [
-    { id: 'destination', value: 'destination', label: '  Destination', content: <DestinationTabContent />, icon: <TargetIcon />, },
+    { id: 'destination', value: 'destination', label: 'Destination', content: <DestinationTabContent />, icon: <TargetIcon />, },
     { id: 'slug', value: 'slug', label: '  Slug', content: <SlugTabContent />, icon: <Link2Icon /> },
-    { id: 'seo', value: 'seo', label: '  SEO', displayName: 'search engine optimization', content: <SeoTabContent />, icon: <Crosshair2Icon />},
+    { id: 'seo', value: 'seo', label: 'SEO', displayName: 'SEO', content: <SeoTabContent />, icon: <Crosshair2Icon />},
     { id: 'timeframe', value: 'timeframe', label: ' expiration', content: <ExpirationTabContent />, icon: <ClockIcon />},
     { id: 'security', value: 'security', label: '  Security', content: <SecurityTabContent />, icon: <LockClosedIcon /> },
     { id: 'abtesting', value: 'abtesting', label: '  A/B Testing', content: <AbTestingTab />, icon: <PersonIcon /> },
     { id: 'routing', value: 'routing', label: '  Routing', content: <SlugTabContent />, icon: <ShuffleIcon /> },
     { id: 'share', value: 'share', label: '  Share', content: <SlugTabContent />, icon: <Share1Icon /> },
-    // { id: 'blacklists', value: 'blacklist', label: 'Blacklists', content: <SlugTabContent />, icon: <Link2Icon /> },
-    // { id: 'cache', value: 'cache', label: 'Cache', content: <SlugTabContent />, icon: <Link2Icon /> },
-    // { id: 'securityHeaders }
-    // { id: 'qrCodes', value: 'qrCodes', label: 'QR Codes', content: <SlugTabContent />, icon: <Link2Icon /> },
 ];
 
 

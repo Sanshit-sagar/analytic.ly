@@ -3,10 +3,7 @@ import { styled } from '../stitches.config'
 import { AppContainer } from '../primitives/Shared'
 import { ScrollArea } from '../primitives/ScrollArea'
 
-import PieChart from '../components/Pie'
 import Plafond from '../components/Plafond'
-import GroupedBars from '../components/Bars'
-// import { UtmParameters } from '../components/SubMenus/SeoParameters/utmParameters'
 import Collections from '../components/Collections'
 
 import { Box } from '../primitives/Box'
@@ -51,7 +48,7 @@ export const DashboardLayoutGraphRow = styled('div', {
 const UserCollections = () => {
 
     return (
-        <Box css={{ width: '300px', margin: '$1' }}>
+        <Box css={{ width: '300px', margin: '$1', mt: '$2' }}>
             <Flex css={{ width: '100%', fd: 'column', jc: 'flex-start', ai: 'stretch', gap: '$1', mb: '$2' }}>
                 <Collections />
             </Flex>

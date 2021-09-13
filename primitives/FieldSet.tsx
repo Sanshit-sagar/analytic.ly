@@ -64,14 +64,11 @@ export const ControlGroup = styled('fieldset', {
     all: 'unset',
     minWidth: '50px',
     maxWidth: '450px',
-    overflowY: 'hidden',
-    overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     gap: '$1',
-    margin: '%1', 
     padding: '$1',
     br: '$1',
     border: 'thin solid $border'
@@ -120,14 +117,16 @@ export const Label = ({children}: {children:React.ReactNode}) => (
 const InputBase = styled('input', {
     mb: '$1',
     flex: '1 0 auto',
-    borderRadius: '$1',
-    color: '$accentFull',
-    bc: '$accentDulled',
-    border: 'thin solid',
-    br: 0,
-    borderColor: '$border',
-    fontSize: 14,
-    placeholder: '$loContrast'
+    color: '$text',
+    bc: '$canvas',
+    br: '$1',
+    border: 'thin solid $border',
+    placeholder: '$accentDulled',
+    padding: '$2',
+    outline: 'none',
+    '&:hover': {
+        borderColor: '$border3'
+    },
 });
   
 export const Input = styled(InputBase, {
@@ -141,7 +140,7 @@ export const MediumInput = styled(InputBase, {
 }); 
 
 export const LargeInput = styled(InputBase, {
-    height: '20px',
-    width: '200px'
+    height: '25px',
+    width: '125px'
 });
   

@@ -28,7 +28,17 @@ export const StyledHeader = ({ value }: { value: string }) => {
         <Text 
             size='1' 
             as='span' 
-            css={{ color: '$text', fontWeight: 400, fontStyle: 'regular', pl: '$1', pr: '$2' }}
+            css={{ 
+                color: '$text', 
+                fontSize: 12, 
+                fontWeight: 200, 
+                fontStyle: 'light', 
+                pl: '$1', 
+                pr: '$2', 
+                '&:hover': {
+                    color: '$accentHover'
+                } 
+            }}
         > 
             {value.toUpperCase()} 
         </Text>

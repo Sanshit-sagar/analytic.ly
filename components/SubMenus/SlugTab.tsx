@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { NumberField } from '../../compositions/NumberField'
 
@@ -165,7 +165,7 @@ const SlugTabContent = () => {
 
     return (
         <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'center', gap: '$1'}}>
-            <Flex css={{ fd: 'row', jc: 'center', ai: 'flex-start', gap: '$1' }}>
+            <Flex css={{ fd: 'row', jc: 'center', ai: 'stretch', gap: '$1' }}>
                 <SlugCategorySelector />
                 <NumStringsFieldSet />
                 <SaltLengthFieldSet />

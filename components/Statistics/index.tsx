@@ -13,7 +13,8 @@ import {
 } from '../../hooks/useClicks'
 
 import { a, useSpring } from '@react-spring/web'
-import StatsFallback from '../Skeletons/Statistics'
+
+import { StatisticsSkeleton } from './Skeleton'
 
 import { 
     CursorArrowIcon, 
@@ -30,7 +31,7 @@ const statIcons = [
 ];
 
 const StatsWrapper = styled('div', {
-    height: '65px',
+    height: '75px',
     bc: '$neutral',
     display: 'flex',
     fd: 'row', 
@@ -99,7 +100,7 @@ const Statistics = () => {
     const { summary, smLoading, smError } = useUserSummary()
     const { freqs, loading, error } = useFrequencies()
 
-    if(statsLoading ||smLoading || loading) return <StatsFallback />
+    if(statsLoading ||smLoading || loading) return <StatisticsSkeleton />
     if(statsError || smError || error) return <Text as='span'> error... </Text>
 
     let start = summary.start;

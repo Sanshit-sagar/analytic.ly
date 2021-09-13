@@ -9,9 +9,18 @@ import { RangeSlider } from '../../../compositions/Slider'
 import { TextField } from '../../../compositions/TextField'
 import { NumberField } from '../../../compositions/NumberField'
 
+import { useAtom, atom } from 'jotai' 
+
+import { AbTestingGroup } from './AlternatesGroup'
+
 export const ONE_PERCENT = 0.01
 export const ONE_HUNDRED_PERCENT = 1.00
+export const MIN_ALTERNATES = 2
+export const MAX_ALTERNATES = 10
+
 export const VALID_URL_REGEX: RegExp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/
+
+const alternateCountAtom = atom(MIN_ALTERNATES)
 
 const AbTestingContainer = styled('div', {
     height: '100%',
@@ -34,7 +43,7 @@ const handleInitValues = (alternateCount: number, stepSize: number): number[] =>
 
 const Controller = () => {
   
-    const [alternateCount, setAlternateCount] = React.useState(2)
+    const [alternateCount, setAlternateCount] = useAtom(alternateCountAtom)
     const [minValue, setMinValue] = React.useState<number>(ONE_PERCENT)
     const [maxValue, setMaxValue] = React.useState<number>(ONE_HUNDRED_PERCENT)
     let stepSize = (maxValue-minValue)/alternateCount
@@ -56,8 +65,8 @@ const Controller = () => {
                 label='Alternates'
                 value={alternateCount}
                 onChange={handleAlternateCountChange}
-                minValue={2}
-                maxValue={5}
+                minValue={MIN_ALTERNATES}
+                maxValue={MAX_ALTERNATES}
             />
             <ToolbarSeparator /> 
             <RangeSlider
@@ -78,7 +87,7 @@ function isValidURL(urlInput: string) {
     return (res !== null);
 }
 
-const AlternateUrlConfig = () => {
+const AlternateUrlConfig = ({ id }: { id: number; }) => {
     const [value, setValue] = React.useState<string>('')
     const [isValid, setIsValid] = React.useState<boolean>(true)
     
@@ -100,13 +109,12 @@ const AlternateUrlConfig = () => {
     )
 }
 
-
 const AbTestingTab = () => {
 
     return (
         <AbTestingContainer>
             <Controller />
-            <AlternateUrlConfig />
+            <AbTestingGroup /> 
         </AbTestingContainer>
     )
 }

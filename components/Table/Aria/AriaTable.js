@@ -12,15 +12,13 @@ import {
 import { useTableState } from '@react-stately/table';
 import  { useTable } from '@react-aria/table'
 
+import { Box } from '../../../primitives/Box'
 import { darkModeAtom } from '../../../pages/index' 
 import { useAtom } from 'jotai'
 
 
 function AriaTable(props) {
-    let state = useTableState({
-      ...props,
-      showSelectionCheckboxes: props.selectionMode === 'multiple'
-    });
+    let state = useTableState({...props, showSelectionCheckboxes: props.selectionMode === 'multiple'});
     let ref = useRef();
     let {collection} = state;
     let {gridProps} = useTable(props, state, ref);
@@ -28,9 +26,19 @@ function AriaTable(props) {
     const [darkMode] = useAtom(darkModeAtom)
   
     return (
-      <table {...gridProps} ref={ref}>
+    <Box 
+        css={{ 
+            backgroundColor: '$loContrast', 
+            color: 'transparent', 
+            borderColor: '$panel', 
+            border: 'thin solid', 
+            br: '$2' 
+        }}
+    >
+      <table {...gridProps} ref={ref} style={{ backgroundColor: 'transparent' }}>
         <TableRowGroup
           type="thead"
+          style={{ backgroundColor: 'yellow' }}
         >
           {collection.headerRows.map((headerRow) => (
             <TableHeaderRow key={headerRow.key} item={headerRow} state={state}>
@@ -46,6 +54,7 @@ function AriaTable(props) {
                     key={column.key}
                     column={column}
                     state={state}
+                    style={{ backgroundColor: 'orange'}}
                   />
                 )
               )}
@@ -75,6 +84,7 @@ function AriaTable(props) {
           ))}
         </TableRowGroup>
       </table>
+      </Box>
     );
   }
 

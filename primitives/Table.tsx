@@ -3,18 +3,18 @@ import { styled } from '../stitches.config'
 
 const StyledTableHeader = styled('th', {
     margin: 0,
-    pt: '$1',
+    padding: 0,
     border: 'none',
     outline: 'none',
-    borderTop: 'thin solid',
-    borderTopColor: '$loContrast',
-    borderTopRadius: '$2',
-    pl: '$2', 
-    pr: '$2',
+    bc: '$panel',
+    color: '$accent',
     '&:focus': {
         outline: '2px solid',
         outlineColor: '$blue1000',
         outlineRadius: '$2'
+    },
+    '&:hover': {
+        color: '$accentFull',
     },
     variants: {
         align: {
@@ -39,16 +39,15 @@ const StyledTableHeader = styled('th', {
       },
       defaultVariants: {
         align: 'start',
-        border: 'solid',
     },
 });
 
 const StyledTableRow = styled('tr', {
     bc: '$quartz100',
-    border: 'none',
     outline: 'none',
     margin: 0,
     padding: 0,
+    border: 'red',
     '&:focus': {
         outline: '2px solid',
         outlineColor: '$blue700',
@@ -58,10 +57,9 @@ const StyledTableRow = styled('tr', {
 
 const StyledTableCell = styled('td', {
     margin: 0,
-    bc: '$canvas',
+    bc: '$neutral',
     outline: 'none',
     border: 'none',
-    padding: '$1 $2',
     '&:focus': { 
         outline: '2px solid',
         outlineColor: '$blue700',
@@ -78,6 +76,7 @@ const StyledTableRowGroup = styled('div', {
     margin: 0, 
     padding: 0, 
     bc: '$panel',
+    borderBottom: '1px solid $accentContrast',
     '&:hover': {
         bc: '$quartz200',
     },
