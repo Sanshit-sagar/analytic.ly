@@ -16,7 +16,6 @@ const BrushWrapper = styled('div', {
     height: '600px', 
     width: '1100px', 
     border: '2px solid $border',
-    borderColor: '$border', 
     br: '$2',
     overflowY: 'hidden', 
     overflowX: 'hidden',

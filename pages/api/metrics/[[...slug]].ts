@@ -112,7 +112,7 @@ export default getHandler()
     .get('/api/metrics/labels/:bound0/:bound1', async (req: NextApiRequestExtended, res: NextApiResponse) => {
         try { 
             let bound0: number = parseInt(req.params.bound0) || new Date(1970,1,1).getTime()
-             let bound1: number = parseInt(req.params.bound1) || new Date().getTime()
+            let bound1: number = parseInt(req.params.bound1) || new Date().getTime()
 
              if(bound0 && bound1) {
                  const bounds: number[] = [bound0, bound1] 

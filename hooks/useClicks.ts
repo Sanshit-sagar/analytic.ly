@@ -1,6 +1,4 @@
 import useSWR from 'swr'
-import { fetcher } from '../lib/utils/fetcher'
-import * as namor from 'namor'
 
 export interface Clickstream {
     clicks: any[] | null;
@@ -15,7 +13,7 @@ export type XYTimeSeries = {
 }
 
 export const useClicks = (clicksEndpoint: string): Clickstream => {
-    const { data, error } = useSWR(clicksEndpoint, fetcher)
+    const { data, error } = useSWR(clicksEndpoint)
 
     return {
         clicks: data?.clicks || null,
@@ -25,7 +23,7 @@ export const useClicks = (clicksEndpoint: string): Clickstream => {
 }
 
 export const useTimeseries = (endpoint: string): XYTimeSeries => {
-    const { data, error } = useSWR(endpoint, fetcher);
+    const { data, error } = useSWR(endpoint);
 
     return {
         timeseries: data?.timeseries || null,
@@ -37,7 +35,7 @@ export const useTimeseries = (endpoint: string): XYTimeSeries => {
 export const useUniques = () => {
     let endpoint = `/api/users/sanshit.sagar@gmail.com/uniques`
 
-    const { data, error } = useSWR(endpoint, fetcher);
+    const { data, error } = useSWR(endpoint);
 
     return {
         uniques: data?.userUniques || [],
@@ -50,7 +48,7 @@ export const useUniques = () => {
 export const useClickHistoryForUser = (amount: number, range: string, interval: string) => {
     let endpoint = `/api/metrics/user/sanshit.sagar@gmail.com/tail/${amount}/${range}/${interval}`
 
-    const { data, error } = useSWR(endpoint, fetcher);
+    const { data, error } = useSWR(endpoint);
 
     return {
         clicks: data?.mergedIntervals || {},
@@ -74,7 +72,7 @@ export const useClickHistoryForSlug = (slug:string, amount: string, range: strin
     const API = '/api/metrics/slug'
     let endpoint =  `${API}/${slug}/tail/${amount}/${range}/${interval}`
 
-    const { data, error } = useSWR(range && slug && interval ? `${API}/${slug}/tail/${amount}/${range}/${interval}` : null, fetcher);
+    const { data, error } = useSWR(range && slug && interval ? `${API}/${slug}/tail/${amount}/${range}/${interval}` : null)
 
     return {
         data: data || {},
@@ -91,7 +89,7 @@ export const useClickHistoryForSlug = (slug:string, amount: string, range: strin
 export const useFrequencies = () => {
     let endpoint =  `/api/users/sanshit.sagar@gmail.com/frequencies`
 
-    const { data, error } = useSWR(endpoint, fetcher)
+    const { data, error } = useSWR(endpoint)
 
     return {
         freqs: data?.frequencies || {},
@@ -111,7 +109,7 @@ export const useUserRankings = (category: string, email?: string, topOnly: boole
     let rankingCategory = category==='freqs' ? 'frequencies' : 'uniques'
     let endpoint = `/api/users/sanshit.sagar@gmail.com/rankings/${rankingCategory}`
 
-    const { data, error } = useSWR(endpoint, fetcher);
+    const { data, error } = useSWR(endpoint);
 
 
     return category==='freqs' ? {
@@ -129,7 +127,7 @@ export const useGeodata = (fetchStats: boolean = false, mode?: string) => {
     let endpoint = `/api/geo/clicks/user/sanshit.sagar@gmail.com`
     if(fetchStats) endpoint += `/stats/${mode}`;
 
-    const { data, error } = useSWR(endpoint, fetcher)
+    const { data, error } = useSWR(endpoint)
     console.log(`Returning: ${JSON.stringify(data?.geodata || 'na')}`)
 
     return {
@@ -141,7 +139,7 @@ export const useGeodata = (fetchStats: boolean = false, mode?: string) => {
 
 export const useUserStatistics = () => {
     let statisticsEndpoint = `http://localhost:3000/api/users/sanshit.sagar@gmail.com/statistics`
-    const { data, error } = useSWR(statisticsEndpoint, fetcher)
+    const { data, error } = useSWR(statisticsEndpoint)
 
     return {
         statistics: data?.userStatistics || null,
@@ -152,7 +150,7 @@ export const useUserStatistics = () => {
 
 export const useUserSummary = () => {
     let summaryEndpoint = `http://localhost:3000/api/users/sanshit.sagar@gmail.com/summary`
-    const { data, error } = useSWR(summaryEndpoint, fetcher)
+    const { data, error } = useSWR(summaryEndpoint)
 
     return {
         summary: data?.userSummary || null,
