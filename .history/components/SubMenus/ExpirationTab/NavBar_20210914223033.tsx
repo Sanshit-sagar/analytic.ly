@@ -56,7 +56,7 @@ export const Navbar = ({
                     if(prev==='December') setYear(year - 1); 
                     onPreviousClick()
                 }}
-                css={{ float: 'left', borderRadius: '$1', mt: '' }} 
+                css={{ float: 'left', borderRadius: '$1', mt: '$1' }} 
             >
                 <ChevronLeftIcon />
             </IconButton>
