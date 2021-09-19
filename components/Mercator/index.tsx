@@ -15,8 +15,9 @@ import { Text } from '../../primitives/Text'
 import { Flex } from '../../primitives/Flex'
 import { useGeodata } from '../../hooks/useClicks'
 
+import { useAtomValue } from 'jotai/utils'
 import { darkModeAtom } from '../../pages/index'
-import { useAtom } from 'jotai'
+import { useGloballyConsistentColors } from '../../hooks/useColors'
 
 import {
     useTooltip,
@@ -37,22 +38,6 @@ interface ICustomMercator {
     markers: any[];
 }
 
-// memoize with useMemo()
-const color = scaleQuantize({
-    domain: [
-      Math.min(...world.features.map(f => f.geometry.coordinates.length)),
-      Math.max(...world.features.map(f => f.geometry.coordinates.length)),
-    ],
-    range: [
-        'rgba(50,255,150,1.0)',
-        'rgba(50,255,150,0.8)',
-        'rgba(50,255,150,0.6)',
-        'rgba(50,255,150,0.4)',
-        'rgba(50,255,150,0.2)',
-        'rgba(50,255,150,0.1)',
-    ],
-});
-
 interface TooltipData {
     longitude: number;
     latitude: number; 
@@ -66,7 +51,7 @@ interface TooltipData {
 const CustomMercator = React.memo(function CustomMercator({ height, width, markers }: ICustomMercator) {
     if(width < 10) return null;
 
-    const [darkMode] = useAtom(darkModeAtom)
+    const darkMode = useAtomValue(darkModeAtom)
 
     const {
         tooltipLeft,
@@ -75,7 +60,24 @@ const CustomMercator = React.memo(function CustomMercator({ height, width, marke
         hideTooltip,
         showTooltip,
         tooltipData
-    } = useTooltip<TooltipData>();
+    } = useTooltip<TooltipData>()
+
+    // memoize with useMemo()
+    const colors = useGloballyConsistentColors()
+    const color = scaleQuantize({
+        domain: [
+            Math.min(...world.features.map(f => f.geometry.coordinates.length)),
+            Math.max(...world.features.map(f => f.geometry.coordinates.length)),
+        ],
+        range: [
+            colors.funky, 
+            colors.funkyText, 
+            colors.text,
+            colors.hiContrast, 
+            colors.accentHover, 
+            colors.accentPressed, 
+        ],
+    });
 
     const handleTooltip = (event: React.MouseEvent<SVGCircleElement>, marker: any) => {
         const coords = localPoint(event);
@@ -95,11 +97,11 @@ const CustomMercator = React.memo(function CustomMercator({ height, width, marke
                 x: parseFloat(marker.x),
                 y: parseFloat(marker.y)
             }
-        });
+        })
     }
     
     const BACKGROUND = 'transparent'
-    const GRATICULE_STROKE = darkMode ? 'rgba(225,225,225,0.125)' : 'rgba(33,33,33,0.125)'
+    const GRATICULE_STROKE = darkMode ? 'rgba(10,10,10,0.2)' : 'rgba(255,255,255,0.2)'
 
     const scale = (width / 630) * 100;
     const translate: [number, number] = [width/2, (height/2) + 70]
@@ -117,6 +119,7 @@ const CustomMercator = React.memo(function CustomMercator({ height, width, marke
                     width={width} 
                     height={height} 
                     fill={BACKGROUND} 
+                    opacity={0.2}
                     rx={15} 
                     ry={15}
                 />

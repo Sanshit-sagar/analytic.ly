@@ -89,7 +89,6 @@ export default getHandler()
         if(email && range) {
             const { views, minTimestamp, maxTimestamp } = await getDoubleEndedClickstream(0, -1, email, 'user', true);
             const boundaries: number[] = getRangeBoundaries(amount, range, interval);
-            console.log(`GOT THE BOUNDARIES:: ${JSON.stringify(boundaries)}`);
             const ticksInRange: number[] = getTicksInRange(boundaries[0], boundaries[1], interval, interval);
             const { mergedIntervals, viewsByIntervals, bounds, numPeriods, numClicks } = merge(views, boundaries, ticksInRange, interval); 
 

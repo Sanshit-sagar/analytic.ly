@@ -67,7 +67,7 @@ interface ITabsContentWrapperProps {
 }
 
 function isSmall(sizeText: string): boolean {
-    return sizeText==='small';
+    return !sizeText?.length ? false : sizeText==='small' ? true : false; 
 }
 
 const TabsContentWrapper = ({ index, size, value, children }: ITabsContentWrapperProps) => (isSmall(size) 

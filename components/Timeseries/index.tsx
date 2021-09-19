@@ -2,29 +2,21 @@ import React from 'react'
 
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-
-import ClickHistory from './ClickHistory'
-import { 
-    ToolbarButtonGroup, 
-    ToolbarSeparator as TBAR 
-} from '../../primitives/Toolbar'
-
-import SelectMenu from '../../compositions/SelectMenu'
-import { ToggleGroup } from '../../compositions/ToggleButtonsGroup'
-
 import {
     zoomOptions,
+    rangeOptions,
+    rangeIndexAtom,
+    intervalOptions,
+    intervalIndexAtom,
     clickstreamZoomIndexAtom,
     clickstreamZoomTextValueAtom
-} from '../../atoms/clickstream'
-import {
-    rangeOptions,
-    intervalOptions
-} from '../../hooks/useAtomicClicks'
-import {
-    rangeIndexAtom,
-    intervalIndexAtom 
-} from '../../pages/index'
+} from '../../atoms/timeseries'
+
+import ClickHistory from './ClickHistory'
+import SelectMenu from '../../compositions/SelectMenu'
+import { ToggleGroup } from '../../compositions/ToggleButtonsGroup'
+import { ToolbarButtonGroup, ToolbarSeparator as TBAR } from '../../primitives/Toolbar'
+
 
 export const Range = () => {
     const [selectedIndex, setSelectedIndex] = useAtom(rangeIndexAtom)

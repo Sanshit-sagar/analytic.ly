@@ -1,6 +1,9 @@
+import React from 'react'
 
 import { styled, keyframes } from '../stitches.config'
-
+import { Text } from './Text'
+import { Flex } from './Flex'
+import { Icon } from './Icon'
 
 const slideUpAndFade = keyframes({
     '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -23,10 +26,17 @@ const slideLeftAndFade = keyframes({
 });
 
 
-const List = styled('div', {
+const List = styled('ul', {
     width: '100%',
     backgroundColor: 'transparent',
-    border: 'none',
+    overflow: 'auto',
+    outline: 'none',
+    display: 'flex',
+    fd: 'column',
+    jc: 'flex-start',
+    ai: 'flex-start',
+    margin: 0,
+    padding: 0,
     '@media (prefers-reduced-motion: no-preference)': {
         animationDuration: '400ms',
         animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -52,10 +62,9 @@ const ListItem = styled('li', {
     position: 'relative',
     width: '100%',
     color: '$hiContrast',
-    border: '1px solid',
-    borderColor: '$border',
+    border: '1px solid $border',
     borderTop: 'none',
-    backgroundColor: '$loContrast',
+    bc: '$panel',
     display: 'flex',
     fd: 'row',
     jc: 'space-between',
@@ -65,15 +74,6 @@ const ListItem = styled('li', {
     '&[data-disabled]': {
         color: '$accentContrast',
         pointerEvents: 'none',
-    },
-    '&:focus': {
-        color: '$accentContrast',
-        bc: '$accentFull',
-        borderColor: '$border3',
-    },
-    '&:hover': {
-        backgroundColor: '$accent',
-        borderColor: '$border3',
     },
     '&:first-child': {
         borderTop: 'thin solid $border',
@@ -86,12 +86,183 @@ const ListItem = styled('li', {
     },
 });
 
-const StyledDescription = styled('div', {
-    fontWeight: 'normal',
-    fontSize: '12px',
+interface ICustomListItemProps {
+    props: React.HTMLAttributes<HTMLElement>; 
+    ref: React.RefObject<HTMLLIElement>; 
+    isFocused: boolean; 
+    isPressed: boolean; 
+    isHovered: boolean; 
+    isSelected: boolean; 
+    isDisabled: boolean;
+    children: any;
+};
+
+const AriaListItem = ({ props, ref, isFocused, isPressed, isSelected, isHovered, isDisabled, children }: ICustomListItemProps) => (
+    <ListItem 
+        {...props} 
+        ref={ref}
+        css={{ 
+            border:'thin solid $border', 
+            bc: isSelected ? '$border' : isHovered ? '$accentHover' :  isPressed ? '$accentPressed' : isDisabled ? '$canvas' : '$accent',
+            borderColor: isFocused ? '$funkyText' : isSelected ? '$border3' : '$border',
+            borderLeft: 'none',
+            borderRight: 'none'
+        }}
+    >
+        <Text 
+            size='2'
+            css={{ 
+                color: '$text',
+                width: '100%', 
+                display: 'flex', 
+                fd: 'justifyContent', 
+                jc: 'space-between', 
+                ai: 'flex-start' 
+            }}
+        >
+            {children} 
+        </Text>
+    </ListItem>
+);
+
+export const ListBoxSection = styled('ul', {
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    padding: 0,
+    bc: '$panel',
+    color: '$funky',
+    '&:hover': {
+        color: '$accentHover'
+    }
+})
+
+export const ListBoxSectionGroup = styled('div', {
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column', 
+    bc: '$accent',
+    color: '$text',
+    jc: 'flex-start',
+    ai: 'stretch',
+    mt: '$1'
 });
-  
+
+interface IListBoxSectionLabelProps {
+    children: true | React.ReactChild | React.ReactFragment | React.ReactPortal;
+    props: React.HTMLAttributes<HTMLElement>; 
+    icon: Element; 
+    sectionName: true | React.ReactChild | React.ReactFragment | React.ReactPortal;
+    sectionDescription?: string; 
+    href: string; 
+    minimize?: boolean;
+}
+
+interface IMinimizableDescriptionProps { 
+    text: string | undefined;
+    isMinimized: boolean; 
+    toggleMinimize: () => void; 
+}
+
+
+const MinimizableDescription = ({ text, isMinimized, toggleMinimize }: IMinimizableDescriptionProps) => (
+    <> 
+        {!text || !text?.length ? null :
+            <Text 
+                size='1' 
+                css={{ 
+                    textOverflow: 'ellipses', height: '15px', width: '100%', 
+                    color: '$text', display: 'flex', fd: 'row', jc: 'flex-start', ai: 'flex-start' 
+                }}
+            >
+               {text}
+            </Text> 
+        }
+    </>
+)
+
+export const ListBoxSectionLabel = ({ 
+    props, 
+    icon, 
+    sectionName, 
+    sectionDescription, 
+    minimize = false, 
+    href 
+}: IListBoxSectionLabelProps) => {
+
+    const [isMinimized, setIsMinimized] = React.useState(minimize)
+
+    const toggleMinimize = () => setIsMinimized(!isMinimized)
+
+    return (
+        <Flex 
+            css={{ 
+                height: '100%', width: '80%', display: 'flex', fd: 'column', 
+                jc: 'flex-start', ai: 'flex-start', gap: '1px', ml: '$2', mt: '$2'
+            }}
+        >
+            <Flex css={{ fd: 'row', jc: 'flex-start', ai: 'flex-start', gap: '$1' }}>
+                <Text 
+                    {...props}
+                    size='3'
+                    css={{ 
+                        color: '$funky', fontStyle: 'bold', textTransform: 'uppercase', bc: '$panel', fontSize: 14, 
+                        display: 'flex', fd: 'row', jc: 'flex-start', ai: 'flex-start', gap: '$2'
+                    }}
+                >
+                    <> {href?.length  ? <a href={href}>  {sectionName} </a> : {sectionName}} </>
+                </Text>
+
+                <Icon label={'External link'}>
+                    {icon || ''} 
+                </Icon> 
+            </Flex>
+
+            <MinimizableDescription 
+                text={sectionDescription} 
+                isMinimized={isMinimized} 
+                toggleMinimize={toggleMinimize}
+            />     
+        </Flex> 
+    )
+}
+
+interface IListBoxItemProps {
+    children: any;
+    props: any;
+}
+
+export const ListBoxItemLabel = ({ children, props }: IListBoxItemProps) => (
+    <label {...props}>
+        <Text
+            size='2' 
+            css={{ 
+                color: '$text', 
+                '&:hover': {
+                    color: '$accent' 
+                },
+            }}
+        > 
+            {children} 
+        </Text>
+    </label>
+);
+
+export const ListBoxItemDescription = ({ children, props }: IListBoxItemProps) => (
+    <Text 
+        {...props} 
+        size='1' 
+        css={{ 
+            color: '$funkyText', ml: '1px', mt: '1px', mb: '$1', 
+            width: '100%', display: 'flex', fd: 'row', jc: 'space-between', ai: 'flex-start'
+        }}
+    >
+        {children}
+    </Text>
+);
 
 export const ListBox = List
-export const ListBoxItem = ListItem
-export const ListBoxDescription = StyledDescription
+export const ListBoxItem = AriaListItem

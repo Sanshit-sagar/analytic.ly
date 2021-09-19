@@ -128,7 +128,6 @@ export const useGeodata = (fetchStats: boolean = false, mode?: string) => {
     if(fetchStats) endpoint += `/stats/${mode}`;
 
     const { data, error } = useSWR(endpoint)
-    console.log(`Returning: ${JSON.stringify(data?.geodata || 'na')}`)
 
     return {
         geodata: data?.geodata || null,

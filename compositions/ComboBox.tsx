@@ -1,14 +1,22 @@
-import React, { useRef } from 'react'
+import React from 'react'
 
 import { useComboBoxState } from '@react-stately/combobox'
 import { useComboBox } from '@react-aria/combobox'
 import { useButton } from '@react-aria/button'
 import { useFilter } from '@react-aria/i18n'
+
 import { styled } from '../stitches.config'
 
 import { ListBox } from './ListBox'
 import { Popover } from './Popover'
-import { Label, LabelGroup, ControlGroup, LargeInput } from '../primitives/FieldSet'
+import { ComboBoxProps } from './interfaces'
+
+import { 
+    Label, 
+    LabelGroup, 
+    ControlGroup, 
+    LargeInput 
+} from '../primitives/FieldSet'
 
 import { Text } from '../primitives/Text'
 import { Button } from '../primitives/Button'
@@ -16,8 +24,6 @@ import { Tooltip } from '../primitives/Tooltip'
 import { OpenMenuIconButton } from './IconButton'
 
 export { Item, Section } from 'react-stately'
-
-import { ComboBoxProps } from './interfaces'
 import { InfoCircledIcon as InfoIcon } from '@radix-ui/react-icons'
 
 const FlexInlineBlock = styled('div', {
@@ -78,22 +84,22 @@ const MatchedItemsCount = ({ matches }: { matches: Iterable<ComboBoxItem> }) => 
     <InfoMessage> {[...matches]?.length ?? 0} matches </InfoMessage>
 );
 
-export function ComboBox(props: ComboBoxProps<ComboBoxItem>) {
+export function ComboBox<T extends object>(props: ComboBoxProps<T>) {
 
     let { contains } = useFilter({ sensitivity: 'base' })
     let state = useComboBoxState({ ...props, defaultFilter: contains })
   
-    let inputRef = useRef<HTMLInputElement>(null)
-    let listBoxRef = useRef<HTMLUListElement>(null)
-    let popoverRef = useRef<HTMLDivElement>(null)
-    let buttonRef = useRef<HTMLButtonElement>(null)
+    let inputRef = React.useRef<HTMLInputElement>(null)
+    let listBoxRef = React.useRef<HTMLUListElement>(null)
+    let popoverRef = React.useRef<HTMLDivElement>(null)
+    let buttonRef = React.useRef<HTMLButtonElement>(null)
   
     let { 
         buttonProps: triggerProps, 
         inputProps, 
         listBoxProps, 
         labelProps 
-    } = useComboBox({ ...props, inputRef, buttonRef, listBoxRef, popoverRef }, state)
+    } = useComboBox({ ...props, inputRef, buttonRef, listBoxRef,  popoverRef }, state);
     
     let { buttonProps } = useButton(triggerProps, buttonRef)
   

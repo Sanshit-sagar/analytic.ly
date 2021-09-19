@@ -1,24 +1,38 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from "react"
-import type { Node } from '@react-types/shared'
-import type { ListState } from '@react-stately/list'
+
 import { 
     useListBox, 
+    useListBoxSection,
     useOption, 
     AriaListBoxOptions 
 } from '@react-aria/listbox'
 
+import type { Node } from '@react-types/shared'
+import type { ListState } from '@react-stately/list'
+import { useHover } from '@react-aria/interactions'
+import { mergeProps } from '@react-aria/utils'
+import { HoverEvent } from './interfaces'
+
 import { 
     ListBox as ListBoxPrimitive, 
     ListBoxItem, 
-    ListBoxDescription 
+    ListBoxItemLabel,
+    ListBoxItemDescription,
+    ListBoxSection as ListBoxSectionItem,
+    ListBoxSectionLabel,
+    ListBoxSectionGroup
 } from '../primitives/ListBox'
 
-import { Text } from '../primitives/Text'
-import { CheckboxIcon } from '@radix-ui/react-icons'
+import { CheckboxIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 
 interface ListBoxProps extends AriaListBoxOptions<unknown> {
     listBoxRef?: React.RefObject<HTMLUListElement>;
+    state: ListState<unknown>;
+}
+
+interface SectionProps {
+    section: Node<unknown>;
     state: ListState<unknown>;
 }
 
@@ -48,70 +62,138 @@ interface IUseOptionsProps {
 }
 
 export function ListBox(props: ListBoxProps) {
-  let ref = React.useRef<HTMLUListElement>(null);
-  let { listBoxRef = ref, state } = props;
-  let { listBoxProps } = useListBox(props, state, listBoxRef);
+    let ref = React.useRef<HTMLUListElement>(null)
+    
+    let { listBoxRef = ref, state,  } = props
+    let { listBoxProps } = useListBox(props, state, listBoxRef)
 
-  return (
-    <ListBoxPrimitive {...listBoxProps} ref={listBoxRef}>
-        {[...state.collection].map((item) => (
-            <Option 
-                key={item.key} 
-                item={item} 
-                state={state} 
-            />
-        ))}
-    </ListBoxPrimitive>
-  );
+    return (
+        <ListBoxPrimitive 
+            {...listBoxProps} 
+            ref={listBoxRef}
+        >
+            {[...state.collection].map((item) => (
+                item.type==='section' ? (
+                    <ListBoxSection
+                        key={item.key}
+                        section={item}
+                        state={state}
+                    />
+                ) : (
+                    <Option 
+                        key={item.key} 
+                        item={item} 
+                        state={state} 
+                    />
+                )
+            ))}
+        </ListBoxPrimitive>
+    )
+}
+
+interface IListBoxSectionLabelProps {
+    props?: React.HTMLAttributes<HTMLElement>;
+    icon?: any; 
+    sectionName: string; 
+    sectionDescription?: string; 
+    minimize: boolean; 
+    href?: any; 
+}
+
+
+function ListBoxSection({ section, state }: SectionProps) {
+    
+    let { itemProps, headingProps, groupProps } = useListBoxSection({
+        heading: section.rendered,
+        'aria-label': section['aria-label']
+    });
+    
+
+    return (
+        <ListBoxSectionItem {...itemProps}>
+            {section.rendered && (
+                <ListBoxSectionLabel 
+                    props={headingProps} 
+                    icon={<ChevronRightIcon />}
+                    sectionName={section.rendered}
+                    sectionDescription={'this is a description'} 
+                    href={'https://sanshitsagar.com'}
+                    minimize={false} 
+                >
+                    {section.rendered}
+                </ListBoxSectionLabel>
+            )}
+            <ListBoxSectionGroup {...groupProps}>
+                {[...section.childNodes].map((node) => (
+                    <Option 
+                        key={node.key} 
+                        item={node} 
+                        state={state} 
+                    />
+                ))}
+            </ListBoxSectionGroup>
+        </ListBoxSectionItem>
+    )
 }
 
 function Option({ item, state }: OptionProps) {
-  let ref = React.useRef<HTMLLIElement>(null);
-  let {
-    optionProps,
-    labelProps,
-    descriptionProps,
-    isSelected,
-    isFocused,
-} : IUseOptionsProps = useOption({ key: item.key }, state, ref);
+  let ref = React.useRef<HTMLLIElement>(null)
 
-  return (
-    <ListBoxItem
-        {...optionProps}
-        ref={ref}
-        isFocused={isFocused}
-        isSelected={isSelected}
-    >
-        <OptionContext.Provider 
-            value={{ labelProps, descriptionProps }}
+    let {
+        optionProps,
+        labelProps,
+        descriptionProps,
+        isSelected,
+        isFocused,
+        isDisabled,
+        isPressed
+    } : IUseOptionsProps = useOption({ key: item.key }, state, ref);
+    
+    // todo : set props for context above
+    let { hoverProps, isHovered } = useHover({
+        onHoverStart: (_: HoverEvent) => console.log(`hovering: ${item.key}`),
+        onHoverEnd: (_: HoverEvent) => console.log(`hovering: ${item.key}`),
+    });
+
+    return (
+        <ListBoxItem
+            ref={ref}
+            props={mergeProps(optionProps, hoverProps)}
+            isHovered={isHovered}
+            isFocused={isFocused}
+            isSelected={isSelected}
+            isDisabled={isDisabled}
+            isPressed={isPressed}
         >
-          <Text> {item.rendered} </Text>
-        </OptionContext.Provider>
+            <OptionContext.Provider 
+                value={{ labelProps, descriptionProps }}
+            >
+                 {item.rendered} 
+            </OptionContext.Provider>
 
-        {isSelected && (
-            <CheckboxIcon  
-                aria-hidden="true" 
-                css={{ height: 18, width: 18 }} 
-            />
-        )}
-    </ListBoxItem>
-  );
+            {isSelected && (
+                <CheckboxIcon aria-hidden="true" />
+            )}
+        </ListBoxItem>
+    );
 }
 
 export function Label({ children }: { children: React.ReactNode }) {
     let { labelProps } = React.useContext(OptionContext);
     return (
-        <div {...labelProps}> 
-            {children} 
-        </div>
+        <ListBoxItemLabel 
+            props={labelProps} 
+            children={children} 
+        /> 
     );
 }
 
 export function Description({ children }: { children: React.ReactNode }) {
     let { descriptionProps } = React.useContext(OptionContext);
     return (
-        <ListBoxDescription {...descriptionProps}>
-            {children}
-        </ListBoxDescription>
-  );
+        <ListBoxItemDescription
+            props={descriptionProps} 
+            children={children} 
+        />
+    );
 }

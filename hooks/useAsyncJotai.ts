@@ -13,7 +13,7 @@ const runFetchAtom = atom(
         const data = await response.json()
         set(fetchResultAtom, { loading: false, error: null, data })
       } catch (error) {
-        set(fetchResultAtom, { loading: false, error, data: null })
+        set(fetchResultAtom, { loading: false, error: 'ERROR', data: null })
       }
     }
     fetchData()

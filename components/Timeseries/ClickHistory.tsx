@@ -1,13 +1,7 @@
 import React from 'react'
 
-import ParentSize from '@visx/responsive/lib/components/ParentSize'
-
-import { usePresetClickstream } from '../../hooks/useAtomicClicks'
-import { format } from '../../lib/utils/d3time'
 import { useAtomValue } from 'jotai/utils'
-import {
-    intervalAtom 
-} from '../../hooks/useAtomicClicks'
+import ParentSize from '@visx/responsive/lib/components/ParentSize'
 
 import {
     Datum,
@@ -18,6 +12,9 @@ import {
     ClickFmtTime,
     FormattedTimes
 } from './interfaces'
+import { format } from '../../lib/utils/d3time'
+import { intervalAtom } from '../../atoms/timeseries'
+import { usePresetClickstream } from '../../hooks/useAtomicClicks'
 
 import Brush from './Brush'
 
@@ -42,8 +39,7 @@ function formatClickDate(x: number, minTimestamp: number, interval: string): { t
 
 
 const ClickHistory = () => {
-    // const amount = useAtomValue(amountAtom)
-    // const range = useAtomValue(rangeAtom)
+    
     const interval = useAtomValue(intervalAtom)
 
     const { clicks, minTimestamp, loading, error } = usePresetClickstream()

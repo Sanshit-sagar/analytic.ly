@@ -1,8 +1,6 @@
 import React from 'react'
 
-import { Box } from '../../primitives/Box'
 import { Text } from '../../primitives/Text'
-import { Flex } from '../../primitives/Flex'
 import { TextField } from '../../primitives/TextField'
 import { CentralControlGroup, Label } from '../../primitives/FieldSet' 
 
@@ -15,11 +13,9 @@ import {
     InfoCircledIcon 
 } from '@radix-ui/react-icons'
 
-import { OpenGraphResults } from './DestinationTab/OpenGraph'
 import { 
     isDestinationInputValidAtom, 
-    destinationInputAtom, 
-    destinatioParamsAtom 
+    destinationInputAtom
 } from '../../atoms/destination'
 
 const VALID_RESULT = 'Sweet, that works!'
@@ -44,91 +40,6 @@ const Validator = () => {
     );
 }
 
-const UrlParamKey = ({ value }: { value: string }) => {
-
-    return (
-        <Text 
-            css={{ 
-                width: '100px', 
-                textDecoration: 'underline', 
-                textDecorationColor: '$accent',
-                color: '$accent'
-            }}
-        > 
-            {value}: 
-        </Text>
-    )
-}
-
-interface DestinationURLObject { 
-    hostname: string; 
-    hash: string; 
-    origin: string; 
-    password: string; 
-    protocol: string; 
-    port: string; 
-    search: string; 
-    username: string; 
-    pathname: string; 
-}
-
-type URLObjectKey = 'hostname' | 'hash' | 'origin' | 'password' | 'protocol' | 'port' | 'search' | 'username' | 'pathname'
-
-export const UrlBreakdown = () => {
-    const destinationParameters: { [key: string]: string } | null = useAtomValue(destinatioParamsAtom)
-
-    let keys: string[] = destinationParameters ? Object.keys(destinationParameters) : []
-    if(!keys?.length || !destinationParameters) return null;
-    
-    return (
-        <Box 
-            css={{ 
-                height: '100%', 
-                width: '350px',
-                padding: '$1',
-                pt: '$3', 
-                margin: '$1', 
-                bc: 'transparent', 
-                border: '1px solid $border', 
-                '&:hover': {
-                    borderColor: '$border3' 
-                }
-            }}
-        >
-            {destinationParameters && keys.map((key: string, idx: number) => {
-                if(destinationParameters===null || !destinationParameters[key]) return null;
-
-                if(key==='search') {
-                    let searchParamEntries: string[] = destinationParameters['search'].substring(1).split('&')
-                    if(!searchParamEntries?.length) return <Text> '-' </Text>
-
-                    return (
-                        <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'stretch', gap: '$2',  mt: '$1'}}>
-                            <UrlParamKey value={'Search Params'} />
-                            <Flex css={{ fd: 'column', jc: 'space-between', ai: 'flex-start', margin: '$1', ml: '$3' }}> 
-                                {searchParamEntries.map((entry: string, i: number) => (
-                                    <Text key={i} css={{ color: '$text'}}> 
-                                        {JSON.stringify(entry)} 
-                                    </Text>
-                                ))}
-                            </Flex>
-                        </Flex>
-                    );
-                }
-
-                return (
-                <Flex key={idx} css={{ width: '300px', fd: 'row', jc: 'space-between', ai: 'flex-start', gap: '$2', mt: '$1' }}>
-                        <UrlParamKey value={key} />
-                        <Text css={{ width: '100%', float: 'right', color: '$accent' }}> 
-                            {destinationParameters[key]} 
-                        </Text>
-                    </Flex>
-                );
-            })}
-        </Box>
-    );
-}
-
 export const DestinationTabContent = () => {
     const [destinationInput, setDestinationInput] = useAtom(destinationInputAtom)
     
@@ -138,7 +49,6 @@ export const DestinationTabContent = () => {
     }
 
     return (
-        <>
         <CentralControlGroup>
             <Label> 
                 <Text css={{ color: '$text', fd: 'row', jc: 'flex-start', ai: 'center', gap: '$3' }}>
@@ -164,9 +74,6 @@ export const DestinationTabContent = () => {
             /> 
             <Validator />
         </CentralControlGroup>
-        <OpenGraphResults />
-         {/* <UrlBreakdown /> */}
-        </>
     );
 }
 

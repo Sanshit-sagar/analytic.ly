@@ -59,8 +59,6 @@ export async function getFrequenciesForUserSlugs(rankedSlugs) {
             totalUniques += uniqueCount;
             maxUnique = Math.max(maxUnique, uniqueCount); 
         });
-
-        console.log(`UC:: ${JSON.stringify(uc)}`);
         return { uc, totalUniques, maxUnique } 
     } catch(error) {
         console.error(error.message)
@@ -150,7 +148,6 @@ export async function getStatisticsForUser(email: string): Promise<{ name: strin
                 if(err) {
                     console.error(err.message);
                 } else {
-                   console.log(JSON.stringify(result)); 
                    result.map((res: any, idx: number) => {
                        userStatistics.push({
                            name: `${statisticNames[idx]}`,

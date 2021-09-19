@@ -130,7 +130,7 @@ export async function cacheResponseHeaders(email: string) {
          .zincrby(`os.by.slug.${slug}`, 1, os)
          .zincrby(`engine.by.slug.${slug}`, 1, engine)
          .exec((err: any, result: any[]) => { 
-             console.log(JSON.stringify(result)); 
+             console.log('Got the result'); 
          });
          return Promise.resolve(true);
      } catch (error) {

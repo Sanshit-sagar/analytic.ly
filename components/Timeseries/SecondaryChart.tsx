@@ -25,7 +25,9 @@ import { useFormattedDateRange } from '../../hooks/useDates'
 
 import { useAtom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
-import { filteredDataAtom, boundsAtom } from '../../pages/index'
+import { filteredDataAtom, boundsAtom } from '../../atoms/timeseries'
+
+import { extent } from 'd3-array'
 
 export const PATTERN_ID = 'brush_pattern'
 export const background = '#04002b'
@@ -58,8 +60,7 @@ const SecondaryChart: React.FC<SecondaryChartProps> = ({
     const dateScale = useMemo(() => {
         return scaleTime({
             range: [0, xMax],
-            domain: [new Date(start), new Date(end)],
-            // domain: extent(data, getDate) as [Date, Date]
+            domain: extent(data, getDate) as [Date, Date]
         });
     }, [xMax, data])
 

@@ -1,18 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { styled } from '../../stitches.config'
 
-import useDims from '../../hooks/useDims'
-// import { MarketContext } from '../../store/MarketProvider'
-// import { Text } from '../../primitives/Text'
-
-import { BrushChartProps } from './interfaces'
-
+import Controller from './Controller'
 import PrimaryChart from './PrimaryChart'
 import SecondaryChart from './SecondaryChart'
-import Controller from './Controller'
 
-import { filteredDataAtom } from '../../pages/index'
+import useDims from '../../hooks/useDims'
 import { useAtomValue } from 'jotai/utils'
+import { filteredDataAtom } from '../../atoms/timeseries'
+
+import { BrushChartProps } from './interfaces'
 
 const BrushWrapper = styled('div', {
     backgroundColor: '$loContrast', 
@@ -32,7 +29,6 @@ const BrushWrapper = styled('div', {
 });
 
 const Brush = ({ loading, error, mappedData, details }: BrushChartProps) => {
-    // const { filteredDataState: { filteredData } } = useContext(MarketContext);
     const filteredData = useAtomValue(filteredDataAtom)
 
     const gridItemRef = useRef<HTMLDivElement>(null);

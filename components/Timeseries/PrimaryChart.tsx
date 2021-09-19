@@ -22,7 +22,7 @@ import { XAxisLabel } from './Annotation'
 import { Text } from '../../primitives/Text'
 
 import { useAtomValue } from 'jotai/utils'
-import { filteredDataAtom, boundsAtom } from '../../pages/index'
+import { filteredDataAtom, boundsAtom } from '../../atoms/timeseries'
 import { useGloballyConsistentColors } from '../../hooks/useColors'
 import { useFormattedDateRange } from '../../hooks/useDates'
 
@@ -64,8 +64,6 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
       return scaleTime({
         range: [0, xMax],
         domain: extent(data, getDate) as [Date, Date],
-        // domain: [new Date(new Date().getTime() - durationInMs),new Date()]
-        // domain: [start, end] 
       });
     }, [xMax, data]);
 
@@ -198,8 +196,8 @@ const PrimaryChart: React.FC<PrimaryChartProps> = ({
                 }}
             >
                 <TooltipWrapper>
-                    <Text size='1' css={{ color: '$text'}}> Clicks: {getFormatValue(tooltipData)} </Text>
-                    <Text size='1' css={{ color: '$text'}}> FmtTime: {tooltipData.clickfmttime} </Text>
+                    <Text size='2' css={{ color: '$funky'}}>{getFormatValue(tooltipData)} </Text>
+                    <Text size='1' css={{ color: '$text'}}>{tooltipData.clickfmttime}</Text>
                 </TooltipWrapper>   
             </TooltipWithBounds>
         )}

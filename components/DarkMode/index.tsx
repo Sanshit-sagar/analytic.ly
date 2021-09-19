@@ -41,7 +41,6 @@ const DarkMode = () => {
             css={{ 
                 margin: '0 $2', 
                 mr: '$3',
-                padding: '$1 $1',
                 bc: '$hiContrast', 
                 borderColor: '$funky', 
                 color: '$funky', 

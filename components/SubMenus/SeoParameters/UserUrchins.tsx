@@ -7,11 +7,10 @@ import { Button } from '../../../primitives/Button'
 import { useAsyncJotai } from '../../../hooks/useAsyncJotai'
 import { urlEndpointAtom, fetchUrlAtom } from '../../../atoms/urchins'
 
-const format = (data: any) => JSON.stringify(Object.keys(data.userUrchins))
+// const format = (data: any) => data.userUrchins)
+const format = (data: any) => data ? 'urchins exist' : 'urchins do not exist'
 
-const FetchResult:React.FC<{ url: string }> = ({ url }: 
-    { url: IntrinsicAttributes & { url: string } & { children?: React.ReactNode }
-}) => {
+const FetchResult = ({ url }: { url: string }) => {
     const { data, loading, error } = useAsyncJotai(url)
 
     if(loading) return <Text> Loading... </Text>

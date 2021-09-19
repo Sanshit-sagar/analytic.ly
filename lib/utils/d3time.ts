@@ -138,8 +138,6 @@ export function getLabelsFromBounds(bounds: number[], numTicks: number, outputFm
         console.log(`Adding tick at ${i}`)
         ticks.push(i);
     }
-
-    console.log(`${JSON.stringify(ticks)}`);
     return ticks; 
 }
 

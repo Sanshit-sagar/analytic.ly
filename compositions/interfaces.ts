@@ -7,6 +7,10 @@ export type Orientation = 'horizontal' | 'vertical'
 export type ValidationState = 'valid' | 'invalid'
 export type FocusStrategy = 'first' | 'last'
 export type Direction = 'ltr' | 'rtl'
+
+export type HoverEventType = 'hoverstart' | 'hoverend'
+export type PointerType = 'mouse' | 'pen' 
+
 export type Key = string; 
 
 export type ItemElement<T> = ReactElement<ItemProps<T>>
@@ -43,6 +47,17 @@ export enum DirectionEnum {
 export enum OrientationEnum {
     HORIZONTAL = 'horizontal',
     VERTICAL = 'vertical',
+}
+
+export enum HoverEventEnum {
+    START = 'hoverstart',
+    END = 'hoverend',
+}
+
+export interface HoverEvent {
+    type: HoverEventType;
+    pointerType: PointerType;
+    target: HTMLElement;
 }
 
 interface Collection<T> {

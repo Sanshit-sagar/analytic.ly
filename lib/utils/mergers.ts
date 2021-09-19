@@ -40,6 +40,3 @@ export function merge(views: any[], bounds: number[], ticks :number[], interval:
         numClicks: Object.entries(viewsOnDate).length
     };
 }
-
-// console.log(JSON.stringify(merged))
-// console.log(`${ticks[ticks.length - 1]}`)

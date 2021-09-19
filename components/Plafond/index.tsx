@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 
 import Swatch from '../Swatch'
 import DarkMode from '../DarkMode'
+import { GlobalSearch } from '../GlobalSearch'
 
 import { Icon } from '../../primitives/Icon'
 import { Tooltip } from '../../primitives/Tooltip'
 import { IconButton } from '../../primitives/IconButton'
-import { SearchField } from '../../compositions/SearchField'
 
 import { 
     Head, 
@@ -72,19 +72,9 @@ const pages: IPage[] = [
 ];
 
 const Routez = () =>  (
-    <>
-        {pages.map((page: IPage, _: number) => <IconifiedRoute  page={page}  /> )}
-    </>
-);
-
-
-const GlobalSearch = () => (
-    <SearchField
-        label='Search'
-        placeholder='What are you looking for?'
-        onSubmit={(query) => alert(`User Searched: ${query}`)}
-        autocomplete="off"
-    />
+    <> {pages.map((page: IPage, _: number) => (
+        <IconifiedRoute page={page}  /> 
+     ))} </>
 );
 
 const Plafond = () => (
@@ -95,10 +85,10 @@ const Plafond = () => (
         </HeadGroupL> 
 
         <HeadGroupR>
-            <GlobalSearch />
             <Swatch />
-            <HeadDivider /> 
             <DarkMode /> 
+            <HeadDivider /> 
+            <GlobalSearch />
         </HeadGroupR> 
     </Head>  
 );

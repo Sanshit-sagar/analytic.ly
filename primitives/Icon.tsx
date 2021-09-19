@@ -1,5 +1,6 @@
 import * as AccessibleIcon from '@radix-ui/react-accessible-icon';
 import { IconProps } from '@radix-ui/react-icons/dist/types';
+import { Text } from './Text'
 
 interface IAccessibleIconProps {
     label: string; 
@@ -9,7 +10,9 @@ interface IAccessibleIconProps {
 export const Icon = ({ label = 'icon', children = undefined }: IAccessibleIconProps) => {
     return (
         <AccessibleIcon.Root label={label}>
-            {children}
+            <Text css={{ color: '$text'}}>
+                {children}
+            </Text>
         </AccessibleIcon.Root>
     );
 }

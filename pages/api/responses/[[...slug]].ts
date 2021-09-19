@@ -30,7 +30,6 @@ export default getHandler()
         if(email) {
             try {
                 const responseTimes = await cacheResponseHeaders(email)
-                console.log(`Response Fields--- ${JSON.stringify(responseTimes)}`);
                 
                 res.status(200).json({ responseTimes })
             } catch(error) {

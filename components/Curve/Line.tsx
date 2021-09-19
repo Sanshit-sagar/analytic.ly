@@ -233,7 +233,7 @@ const LineChart = ({
                     top={tooltipTop + margin.top + margin.bottom + 15}
                     style={DEFAULT_TOOLTIP_STYLES}
                 >
-                    <div> {JSON.stringify(tooltipData?.details)} </div>
+                    <div><p> hello </p></div>
                 </TooltipWithBounds>
             )}
         </>
