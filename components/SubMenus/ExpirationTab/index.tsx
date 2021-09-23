@@ -12,9 +12,6 @@ import {
     hoveredStartDateAtom,
     hoveredEndDateAtom
 } from '../../../atoms/expiration'
-import {
-    localeFormatAtom
-} from '../../../atoms/globals'
 
 const StyledExpirationTab = styled('div', {
     width: '100%',
@@ -67,10 +64,10 @@ const DateRangeInputs = () => (
 )
 
 export const ExpirationTabContent = () => {
-    const locale = useAtomValue(localeFormatAtom) 
+    // const locale = useAtomValue(localeFormatAtom) 
 
     return (
-        <I18nProvider locale={locale}>
+        <I18nProvider locale={'en-US'}>
             <StyledExpirationTab>
                 <Calendar /> 
                 <DateRangeInputs />

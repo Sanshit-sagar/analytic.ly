@@ -2,10 +2,13 @@ import React from 'react'
 
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { activeYearAtom, activeMonthAtom } from '../../../atoms/expiration'
+import { activeYearAtom, activeMonthAtom, activePageAtom } from '../../../atoms/expiration'
 
 import { Flex } from '../../../primitives/Flex'
+import { Text } from '../../../primitives/Text'
+
 import SelectMenu from '../../../compositions/SelectMenu'
+import { CalendarIcon, DashboardIcon } from '@radix-ui/react-icons'
 
 interface IMonthSelectorProps {
     onChange: (date: Date) => void;
@@ -33,18 +36,18 @@ interface IYearMonthFormProps {
 }
 
 const monthsStr = [
-    'January', 
-    'February', 
-    'March', 
-    'April', 
-    'May', 
-    'June', 
-    'July', 
-    'August', 
-    'September',  
-    'October', 
-    'November', 
-    'December'
+    ['January', 'Jan'],
+    ['February', 'Feb'],
+    ['March', 'Mar'],
+    ['April', 'Apr'],
+    ['May', 'May'],
+    ['June', 'Jun'],
+    ['July', 'Jul'],
+    ['August', 'Aug'],
+    ['September', 'Sept'],
+    ['October', 'Oct'],
+    ['November', 'Nov'],
+    ['December', 'Dex'],
 ]
 
 function getMonthsInRange(localeUtils: any): ICalendarItem[] {
@@ -52,7 +55,7 @@ function getMonthsInRange(localeUtils: any): ICalendarItem[] {
     localeUtils.getMonths().map((month: string, i: number) => {
         monthItems.push({
             value: `${new Date(month).getMonth()}`,
-            textValue: monthsStr[i],
+            textValue: monthsStr[i][1],
             icon: undefined,
         })
     });
@@ -60,16 +63,15 @@ function getMonthsInRange(localeUtils: any): ICalendarItem[] {
 }
 
 const MonthSelector = ({ onChange, localeUtils }: IMonthSelectorProps) => {
-    const [month, setMonth] = useAtom(activeYearAtom)
-    const year = useAtomValue(activeMonthAtom)
+    const [activePage, setActivePage] = useAtom(activePageAtom)
+   
 
     const handleMonthChange = (updatedMonth: number) => {
-        setMonth(updatedMonth)
-        onChange(new Date(year, updatedMonth))
+        setActivePage(new Date(new Date(activePage).getFullYear(), updatedMonth))
     }
 
     const monthItems: ICalendarItem[] = getMonthsInRange(localeUtils);
-    const sanitizedMonth = parseInt(`${month}`)
+    const sanitizedMonth = parseInt(`${new Date(activePage).getMonth()}`)
 
     return (
         <SelectMenu 
@@ -78,7 +80,7 @@ const MonthSelector = ({ onChange, localeUtils }: IMonthSelectorProps) => {
             selectedIndex={sanitizedMonth}
             setSelectedIndex={(value: number) => handleMonthChange(parseInt(`${value}`))}
             selectedValue={`${sanitizedMonth}`}
-            selectedTextValue={monthsStr[sanitizedMonth]}
+            selectedTextValue={<> <CalendarIcon /> <Text> {monthsStr[sanitizedMonth][1]} </Text> </>}
             group={'Months'}
         />
     );
@@ -114,7 +116,7 @@ const YearSelector = ({ onChange, fromMonth, toMonth }: IYearSelectorProps) => {
             selectedIndex={year}
             setSelectedIndex={(value: number) => handleYearChange(parseInt(`${value}`) + 2021)}
             selectedValue={`${year}`}
-            selectedTextValue={`${year}`}
+            selectedTextValue={<> <DashboardIcon /> <Text>{year} </Text></>}
             group={'Years'}
         />
     );

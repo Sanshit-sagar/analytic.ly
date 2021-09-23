@@ -99,7 +99,7 @@ function SelectMenu(props: ISelectMenuProps) {
     return (
         <ControlGroup>
             <Label>{props.group.toUpperCase() || ''}</Label>
-            <Box css={{ mt: '$2'}}>
+            <Box css={{ mt: '$2', padding: '0' }}>
                 <SelectMenuLoc {...props} />
             </Box>
         </ControlGroup>

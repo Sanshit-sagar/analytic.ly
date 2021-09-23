@@ -44,17 +44,29 @@ export const HeatedAlbersUsa = ({ height, width, map, data }: IHeatedAlbersUsaPr
     } = useTooltip<DataItem>()
     
     const colors = useGloballyConsistentColors()
+    const colorRangesByTheme = [ 
+        colors.hiContrast, 
+        colors.text, 
+        colors.funkyText, 
+        colors.funky,
+        colors.border3,
+        colors.border,
+        colors.accentPressed,
+        colors.accentHover, 
+        colors.accent
+    ];
+    
+    const getColorsByTheme = () => React.useMemo(() => (
+        // !darkMode 
+        [...colorRangesByTheme] 
+        // : [...colorRangesByTheme.reverse()]
+    ), [colors.THEME_NAME, colors.THEME_ID]);
+
     const color = scaleQuantize({
         domain: [500000, 38000000],
-        range: [
-            colors.funky, 
-            colors.funkyText, 
-            colors.text,
-            colors.hiContrast, 
-            colors.accentHover, 
-            colors.accentPressed, 
-        ],
+        range: getColorsByTheme(),
     });
+
     const [hoveredId, setHoveredId] = useState<string | null>(null)
 
     return (

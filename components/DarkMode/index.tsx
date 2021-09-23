@@ -24,7 +24,7 @@ export const getToggledIndex = (preToggleIndex: number) => {
     }
 }
     
-const DarkMode = () => {
+export const DarkMode = () => {
     const [darkMode, setDarkMode] = useAtom(darkModeAtom)
     const [activeThemeIndex, setActiveThemeIndex] = useAtom(activeThemeIndexAtom)
 
@@ -35,8 +35,8 @@ const DarkMode = () => {
     
     return (
         <IconButton
-            size='2'
-            variant='raised'
+            size='1'
+            variant='ghost'
             onClick={thematicToggle} 
             css={{ 
                 margin: '0 $2', 
@@ -57,8 +57,6 @@ const DarkMode = () => {
         </IconButton>
     )
 }
-
-
 
 export const DarkModeAlt = () => {
     const [darkMode, setDarkMode] = useAtom(darkModeAtom)
@@ -81,5 +79,3 @@ export const DarkModeAlt = () => {
         </Flex>
     );
 }
-
-export default DarkMode 

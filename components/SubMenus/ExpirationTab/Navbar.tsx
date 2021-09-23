@@ -8,11 +8,11 @@ import { Tooltip } from '../../../primitives/Tooltip'
 
 import {  
     ChevronLeftIcon, 
-    ChevronRightIcon 
+    ChevronRightIcon
 } from '@radix-ui/react-icons'
 
-const leftNavButtonStyles = { br: '$1',  margin: '$2', height: '35px', width: '35px', float: 'left' }
-const rightNavButtonStyles = { br: '$1',  margin: '$2', height: '35px', width: '35px', float: 'right' }
+const leftNavButtonStyles = { br: '$1',  margin: '$2', mt: '$3', height: '30px', width: '30px', float: 'left' }
+const rightNavButtonStyles = { br: '$1',  margin: '$2', mt: '$3', height: '30px', width: '30px', float: 'right' }
 
 interface INavbarProps {
     onPreviousClick: () => void;

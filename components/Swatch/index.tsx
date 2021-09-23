@@ -121,7 +121,7 @@ const ActiveThemeDisplay = () => {
     )
 }
 
-const Swatch = () => {
+export const Swatch = () => {
     const activeThemeIdStr = useAtomValue(activeThemeIdAtom)
     const activeThemeClassName = useAtomValue(activeThemeClassNameAtom)
 
@@ -165,5 +165,3 @@ const Swatch = () => {
         </Popover>
     )
 }
-
-export default Swatch

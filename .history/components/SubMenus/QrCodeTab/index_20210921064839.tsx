@@ -1,8 +1,0 @@
-
-
-const QrCodeTab = () => {
-    
-    return (
-
-    )
-}

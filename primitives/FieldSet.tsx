@@ -115,7 +115,7 @@ export const Label = ({children}: {children:React.ReactNode}) => (
     </Text> 
 );
 
-const InputBase = styled('input', {
+export const InputBase = styled('input', {
     mb: '$1',
     flex: '1 0 auto',
     color: '$text',

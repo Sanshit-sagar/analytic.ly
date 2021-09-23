@@ -37,8 +37,8 @@ import { useDateFormatter } from '@react-aria/i18n'
 
 
 const StyledCalendarContainer = styled(Box, {
-    width: '410px',
-    height: '400px',
+    width: '385px',
+    height: '385px',
     display: 'flex', 
     fd: 'column',
     jc: 'flex-start',
@@ -57,28 +57,26 @@ const StyledCalendarContainer = styled(Box, {
 
 const StyledCell = styled('button', {
     position: 'relative',
-    height: '35px',
-    width: '35px',
+    height: '30px',
+    width: '30px',
     display: 'flex', 
     fd: 'column',
-    jc: 'flex-start',
-    ai: 'flex-end',
+    jc: 'center',
+    ai: 'center',
     gap: '$1',
     bc: 'transparent',
     border: '1px solid $border',
     br: '$1',
     padding: '$1',
     margin: 0,
-    color: '$accent',
     '&:hover': {
         backgroundColor: '$accent',
         borderColor: '$border3',
-        color: '$funky'
     }
 })
 
 const StyledDate = styled(Text, {
-    color: 'inherit',
+    color: '$funkyText',
     size: '$2',
     fontWidth: 400,
     margin: '$1',
@@ -118,7 +116,7 @@ export const ActivePage = () => {
     const activePage = useAtomValue(activePageAtom)
 
     return (
-        <Text size='4' css={{ display: 'inline-block', fd: 'row', jc: 'flex-start', ai: 'flex-start'}}> 
+        <Text size='4' css={{ color: '$funkyText', display: 'inline-block', fd: 'row', jc: 'flex-start', ai: 'flex-start'}}> 
             {formatter.format(activePage)} 
         </Text>
     );
@@ -183,6 +181,7 @@ export const Calendar = () => {
         <Flex css={{ height: '435px', fd: 'column', jc: 'space-between', ai: 'center', gap: '$1' }}>
             <StyledCalendarContainer>
                 <DayPicker 
+                    showWeekNumbers={true}
                     month={activePage}
                     fromMonth={from}
                     modifiers={modifiers}

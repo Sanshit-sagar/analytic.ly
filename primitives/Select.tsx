@@ -41,8 +41,8 @@ const SelectIndicatorWithIcon = () => <SelectItemIndicator> <DotFilledIcon /> </
 
 const SelectableTrigger = styled(DropdownMenuPrimitive.Trigger, {
     height: '100%',
-    width: '110px',
-    padding: 0,
+    minWidth: '110px',
+    maxWidth: '160px',
     cursor: 'pointer',
     color: '$accent',
     border: '1px solid $border',
@@ -184,6 +184,7 @@ export const StyledSelectRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
     jc: 'space-between',
     ai: 'center',
     userSelect: 'none',
+    textTransform: 'uppercase',
     '&[data-disabled]': {
         color: '$loContrast',
         bc: '$panel',

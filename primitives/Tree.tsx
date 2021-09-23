@@ -22,8 +22,8 @@ export const TreeContainer = styled('div', {
 });
 
 export const TreeFrame = styled('div', {
-    width: '300px',
-    bc: '$neutral',
+    width: '400px',
+    bc: 'transparent',
     position: 'relative',
     padding: '4px 0px 0px 0px',
     textOverflow: 'ellipses',
@@ -54,7 +54,7 @@ export const TreeTitle = styled('span', {
 export const TreeContent = styled(animated.div, {
     willChange: 'transform, opacity, height',
     ml: '$2',
-    padding: '0 0 0 14px',
+    padding: '0 0 0 $2',
     borderLeft: '1px dashed $accent',
     overflow: 'hidden',
 });
