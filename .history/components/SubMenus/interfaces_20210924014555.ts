@@ -1,0 +1,124 @@
+export enum UrchinCategoryEnum {
+    MEDIUM = 'medium',
+    SOURCE = 'source',
+    TERM = 'term',
+    CAMPAIGN = 'campaign',
+    CONTENT = 'content'
+}
+
+
+export enum LoadingStatusEnum {
+    LOADING = 'loading',
+    LOADING_MORE = 'loadingMore',
+    SORTING = 'sorting',
+    FILTERING = 'filtering',
+    IDLE = 'idle',
+    ERROR = 'error'
+}
+export enum SortDirectionEnum {
+    ASC = 'ascending',
+    DESC = 'descending'
+}
+
+export enum LoadingStateEnum {
+    LOADING = 'loading',
+    SORTING = 'sorting',
+    LOADING_MORE = 'loadingMore',
+    ERROR = 'error',
+    IDLE = 'idle',
+    FILTERING = 'filtering'
+}
+
+export type SortDirection = 
+    | SortDirectionEnum.ASC 
+    | SortDirectionEnum.DESC
+
+export type LoadingState = 
+    | LoadingStateEnum.LOADING 
+    | LoadingStateEnum.SORTING 
+    | LoadingStateEnum.LOADING_MORE 
+    | LoadingStateEnum.ERROR 
+    | LoadingStateEnum.IDLE
+    | LoadingStateEnum.FILTERING
+
+export type UrchinCategoryType = 
+    | UrchinCategoryEnum.MEDIUM 
+    | UrchinCategoryEnum.SOURCE
+    | UrchinCategoryEnum.TERM 
+    | UrchinCategoryEnum.CAMPAIGN
+    | UrchinCategoryEnum.CONTENT
+
+
+export interface ServiceInit { 
+    status: ServiceStateEnum.INIT; 
+};
+
+export interface ServiceLoading { 
+    status: ServiceStateEnum.LOADING; 
+};
+
+export interface ServiceLoaded<T> {
+    status: ServiceStateEnum.LOADED;
+    payload: T;
+};
+
+export interface ServiceError {
+    status: ServiceStateEnum.ERROR;
+    error: Error;
+};
+
+export type Service<T> =
+    | ServiceInit
+    | ServiceLoading
+    | ServiceLoaded<T>
+    | ServiceError;
+
+
+export interface IUrchin {
+    id: string; 
+    category: UrchinCategoryType; 
+    name: string; 
+    frequency: number; 
+    updatedAt: Date;
+    createdAt: Date; 
+}
+
+    
+export interface IParamsAccordion {
+    params: string[];
+    name: string; 
+    index: number;
+}
+
+export interface INumberFieldProps {
+    label: string | string[] | undefined | null;
+    value: number | string;
+    handleUpdate: (value: number) => void;  
+}
+
+export interface IUrchinListProps { 
+    key: Key;
+    label: UrchinCategoryType; 
+    filterValue: string; 
+    setFilterValue: (v: string) => void; 
+    endpoint: string | undefined; 
+}
+
+export interface SavedUrchin {
+    key: Key;
+    id: string;
+    category: string;
+    name: string; 
+    frequency: number; 
+    updatedAt: Date; 
+    createdAt: Date; 
+    slugs: string[]; 
+}
+
+
+export interface ApiResponse {
+    count: number;
+    next: string | null;
+    previous: string | null; 
+    result: IUrchin[];
+};
