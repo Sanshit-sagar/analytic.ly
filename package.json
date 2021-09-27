@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
@@ -109,6 +111,11 @@
     "ua-parser-js": "^0.7.28"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/react": "^6.3.8",
     "@types/bluebird": "^3.5.36",
     "@types/d": "^1.0.1",
     "@types/d3": "^7.0.0",
@@ -117,6 +124,7 @@
     "@types/react-table": "^7.7.2",
     "@types/topojson-client": "^3.1.0",
     "@types/ua-parser-js": "^0.7.36",
+    "babel-loader": "^8.2.2",
     "eslint": "7.32.0",
     "eslint-config-next": "11.0.1",
     "speakingurl-add-korean": "^1.1.0",

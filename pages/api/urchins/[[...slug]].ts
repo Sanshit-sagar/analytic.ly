@@ -60,10 +60,10 @@ export default getHandler()
                 res.status(403).json({ error: BAD_REQUEST_INVALID_EMAIL })
             }
     })
-    .post('/api/urchins/user/:email/:urchinKey/:urchinValue',  async (req: NextApiRequestExtended, res: NextApiResponse) => {
-        const email = req.params.email
-        const urchinKey = req.body.category
-        const urchinValue= req.body.urchin
+    .post('/api/urchins/new/:urchinKey/:urchinValue',  async (req: NextApiRequestExtended, res: NextApiResponse) => {
+        const email = 'sanshit.sagar@gmail.com'
+        const urchinKey = req.body.urchinKey
+        const urchinValue= req.body.urchinValue
 
         if(!email) {
             res.status(403).json({ error: BAD_REQUEST_INVALID_EMAIL })
