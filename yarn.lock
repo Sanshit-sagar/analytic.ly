@@ -6687,7 +6687,7 @@
   dependencies:
     "wrappy" "1"
 
-"optics-ts@*", "optics-ts@^2.1.0":
+"optics-ts@*":
   "integrity" "sha512-SJIwf16fwyo9+O+x303BifrWZ/H6Du/hS1zz4UERYt9BaRvxBID9XCYZlQ3c2aIrqeG64AxLcRy8VC/OYUkS9A=="
   "resolved" "https://registry.npmjs.org/optics-ts/-/optics-ts-2.1.0.tgz"
   "version" "2.1.0"

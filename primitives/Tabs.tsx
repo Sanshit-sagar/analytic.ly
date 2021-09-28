@@ -7,6 +7,8 @@ import { Text } from './Text'
 const StyledTabs = styled(TabsPrimitive.Root, {
     height: '600px',
     width: '1100px',
+    overflowY: 'hidden', 
+    overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',

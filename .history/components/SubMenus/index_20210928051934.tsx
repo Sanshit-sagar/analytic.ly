@@ -49,7 +49,7 @@ const PanelWrapper = ({ submenu }: { submenu: ITabItem }) => (
         </MainMenuHeader>
         <MainMenuDivider />
         <MainMenuContent> 
-            <>{submenu.content} </>
+            <> {submenu.content} </>
             <SubmissionUrl /> 
         </MainMenuContent>
     </MainMenuPanel> 
