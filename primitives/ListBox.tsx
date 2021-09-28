@@ -27,9 +27,9 @@ const slideLeftAndFade = keyframes({
 
 const List = styled('ul', {
     width: 'inherit',
-    height: 'inherit',
+    maxHeight: '200px',
     mb: '$2',
-    backgroundColor: 'transparent',
+    backgroundColor: '$transparent',
     outline: 'none',
     display: 'flex',
     fd: 'column',
@@ -37,6 +37,11 @@ const List = styled('ul', {
     ai: 'flex-start',
     margin: 0,
     padding: 0,
+    border: '1px solid $border',
+    borderTop: 'none',
+    '&:hover': {
+        borderColor: '$border3',
+    },
     '@media (prefers-reduced-motion: no-preference)': {
         animationDuration: '400ms',
         animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -61,7 +66,7 @@ const List = styled('ul', {
 const ListItem = styled('li', {
     position: 'relative',
     width: '100%',
-    color: '$hiContrast',
+    color: '$accent',
     border: '1px solid $border',
     borderTop: 'none',
     bc: '$panel',
@@ -111,18 +116,18 @@ const AriaListItem = ({
         {...props} 
         ref={ref}
         css={{ 
-            width: '125%',
             border:'thin solid $border', 
             bc: isHovered ? '$darkestPanel' : 'transparent',
             borderColor: isFocused ? '$funkyText' : isSelected ? '$border3' : '$border',
             borderLeft: isSelected ? '5px solid $border3' : '$border',
-            borderRight: 'none'
+            borderRight: 'none',
+            color: isHovered ? '$funky' : '$funkyText'
         }}
     >
         <Text 
             size='1'
             css={{ 
-                color: '$text',
+                color: 'inherit',
                 width: '100%', 
                 display: 'flex', 
                 fd: 'justifyContent', 
@@ -219,7 +224,10 @@ export const ListBoxSectionLabel = ({
                     display: 'flex', fd: 'row', jc: 'flex-start', ai: 'center', gap: '$1', mb: '$2',
                 }}
             >
-                <> {href?.length  ? <a href={href}>  {sectionName}S </a> : {sectionName}} </>
+                <> { href?.length  
+                    ?  <a href={href}> {sectionName}S </a> 
+                    : {sectionName}} 
+                </>
                 {icon || ''} 
             </Text>
             

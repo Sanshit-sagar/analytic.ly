@@ -15,27 +15,24 @@ import {
     RedirectToSignIn,
     ClerkProvider, 
     ClerkLoading, 
+    SignIn,
     SignedIn, 
     SignedOut
 } from '@clerk/nextjs'
 
 import { Heading } from '../primitives/Heading'
 
+// import Image from 'next/image'
+// import authbg from '../public/assets/authbg.png'
+
+
 const publicPages = ['/', '/sign-in/[[...index]]', '/sign-up/[[...index]]']
 
-type NextPageWithLayout = NextPage & {
-    getLayout?: (page: ReactElement) => ReactNode
-}
-  
-type AppPropsWithLayout = AppProps & {
-    Component: NextPageWithLayout
-}
+type AppPropsWithLayout = AppProps & { Component: NextPageWithLayout }
+type NextPageWithLayout = NextPage & { getLayout?: (page: ReactElement) => ReactNode }
+const swrFetcher = (resource: string, init: any) => fetch(resource, init).then(res => res.json())
 
-const swrFetcher = (resource: string, init: any) => (
-    fetch(resource, init).then(res => res.json())
-); 
-
-const SWRConfigProvider = ({ children }: { children: ReactNode }) => (
+const SWRConfigProvider = ({ children }: { children: React.ReactNode }) => (
     <SWRConfig 
         value={{
             revalidateOnMount: true,
@@ -52,34 +49,37 @@ const SWRConfigProvider = ({ children }: { children: ReactNode }) => (
 );
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-    const router = useRouter()
-
     const getLayout = Component.getLayout ?? ((page) => page)   
-    const isPublicPage = publicPages.includes(router.pathname)
+
+    let { pathname } = useRouter()
+    let isPublicPage = publicPages.includes(pathname)
     
     return (    
         <SSRProvider>
             <IdProvider>
                 <I18nProvider locale={'en-US'}>
-                    <ClerkProvider>
-                        <JotaiProvider> 
-                            <SWRConfigProvider>
-                                {getLayout(isPublicPage ? 
-                                    <Component {...pageProps} />
-                                :  <>
-                                    <ClerkLoading> 
-                                        <Heading size='4'> LOADING... </Heading>
-                                    </ClerkLoading>
-                                    <SignedIn>
-                                        <Component {...pageProps} />
-                                    </SignedIn>
-                                    <SignedOut>
-                                        <RedirectToSignIn />
-                                    </SignedOut>
-                                </>)}
-                            </SWRConfigProvider>
-                        </JotaiProvider>
-                    </ClerkProvider> 
+                    <JotaiProvider> 
+                        <SWRConfigProvider>
+                            <ClerkProvider 
+                                frontendApi={process.env.NEXT_PUBLIC_CLERK_FRONTEND_API} 
+                            >
+                                {getLayout(isPublicPage  
+                                    ?   <Component {...pageProps} />
+                                    :  <>
+                                            <ClerkLoading> 
+                                                <Heading size='4'> LOADING... </Heading>
+                                            </ClerkLoading>
+                                            <SignedIn>
+                                                <Component {...pageProps} />
+                                            </SignedIn>
+                                            <SignedOut>
+                                                <RedirectToSignIn />
+                                            </SignedOut>
+                                        </>
+                                )}             
+                            </ClerkProvider> 
+                        </SWRConfigProvider>
+                    </JotaiProvider>
                 </I18nProvider>
             </IdProvider>
         </SSRProvider>

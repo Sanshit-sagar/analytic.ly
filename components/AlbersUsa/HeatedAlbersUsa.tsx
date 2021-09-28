@@ -57,9 +57,7 @@ export const HeatedAlbersUsa = ({ height, width, map, data }: IHeatedAlbersUsaPr
     ];
     
     const getColorsByTheme = () => React.useMemo(() => (
-        // !darkMode 
         [...colorRangesByTheme] 
-        // : [...colorRangesByTheme.reverse()]
     ), [colors.THEME_NAME, colors.THEME_ID]);
 
     const color = scaleQuantize({

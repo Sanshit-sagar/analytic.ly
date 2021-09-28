@@ -1,11 +1,8 @@
 import { Annotation, Label } from '@visx/annotation'
 import { Text } from '@visx/text'
 
-import { darkModeAtom } from '../../pages/index'
-import { useAtomValue } from 'jotai/utils'
-
 import { useGloballyConsistentColors } from '../../hooks/useColors'
-import { useFormattedDateRange } from '../../hooks/useDates'
+
 
 export type AxisLabelProps = {
     height: number;
@@ -112,17 +109,17 @@ export const GraphDetailsAnnotation = ({ details }: { details: IGraphDetailsProp
     const cherryPickedMean = `${cummulativeClicks/nonEmptyDatums} clicks/day`
     
 
-    const detailedStats = [
-        { id: 0, name: 'Earliest Datum', value: start },
-        { id: 1, name: 'Latest Datum', value: end },
-        { id: 2, name: 'Duration', value: durationStr }, 
-        { id: 3, name: '# Intervals', value: numIntervals },
-        { id: 4, name: 'Interval Length', value: intervalLenStr },
-        { id: 5, name: 'Global Mean', value: globalMean },
-        { id: 6, name: 'Cherry Picked Mean', value: cherryPickedMean },
-        { id: 7, name: 'Max Score', value: maxScore },
-        { id: 8, name: 'Min Score', value: minScore },
-    ]; 
+    // const detailedStats = [
+    //     { id: 0, name: 'Earliest Datum', value: start },
+    //     { id: 1, name: 'Latest Datum', value: end },
+    //     { id: 2, name: 'Duration', value: durationStr }, 
+    //     { id: 3, name: '# Intervals', value: numIntervals },
+    //     { id: 4, name: 'Interval Length', value: intervalLenStr },
+    //     { id: 5, name: 'Global Mean', value: globalMean },
+    //     { id: 6, name: 'Cherry Picked Mean', value: cherryPickedMean },
+    //     { id: 7, name: 'Max Score', value: maxScore },
+    //     { id: 8, name: 'Min Score', value: minScore },
+    // ]; 
 
     // const startStr = `${formattedDate(getDate(detailedStats[0].value))}`
     // const endStr = `${formattedDate(getDate(detailedStats[1].value))}`

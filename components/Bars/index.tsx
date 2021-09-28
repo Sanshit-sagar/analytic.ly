@@ -7,7 +7,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis'
 import { scaleLinear, scaleBand } from '@visx/scale'
 import { localPoint } from '@visx/event'
 
-import Loading from '../Loading'
+import { Loading } from '../Loading'
 import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
@@ -95,7 +95,7 @@ const BarChart = ({
     const xMax = width;
     const yMax = height - margin.top - margin.bottom
     const maxFreq = freqs[0].score
-    const maxUnique = uniquesArr[uniquesArr.length - 1][1].max
+    // const maxUnique = uniquesArr[uniquesArr.length - 1][1].max
 
     const barType = (i: number) => i%2===0 ? 'Frequency' : 'Unique'
     const slug: (d: Datum) => string = (d: Datum) => d.title
@@ -129,16 +129,16 @@ const BarChart = ({
     // const formatFrequency = (frequency: number) => Math.round(frequency * maxFreq)
 
     let freqsBg: typeof freqs = []
+    
     freqs.map((f) => {
         freqsBg.push(f);
         freqsBg.push(f); 
     }); 
 
     function formatTooltipProps(d: any, i: number) {
-        const isFreq: boolean = barType(i)==='Frequency';
+        const isFreq: boolean = barType(i)==='Frequency'
         const viewCount: string = isFreq ? `${freq(d)} Clicks` : `${unique(d)} Uniques`
         const slugName: string = slug(d).substring(0,20)
-        // const normalizedScore: string = isFreq ? `${Math.round(normal(d)*100)}%` : uniqueNormal(d)
         const slugRank: number = isFreq ? rank(d) : uniqueRank(i)
 
         let tooltipData = {

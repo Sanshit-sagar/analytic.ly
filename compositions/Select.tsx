@@ -9,7 +9,6 @@ import {
     SelectRadioItem
 } from '../primitives/Select'
 
-import { Box } from '../primitives/Box'
 import { Text } from '../primitives/Text'
 import { Flex } from '../primitives/Flex'
 import { SelectionOption } from './interfaces'

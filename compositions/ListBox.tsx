@@ -70,7 +70,7 @@ export function ListBox(props: ListBoxProps) {
     let { listBoxProps } = useListBox(props, state, listBoxRef)
 
     return (
-        <ScrollArea>
+    <ScrollArea>
         <ListBoxPrimitive 
             {...listBoxProps} 
             ref={listBoxRef}
@@ -91,7 +91,7 @@ export function ListBox(props: ListBoxProps) {
                 )
             ))}
         </ListBoxPrimitive>
-        </ScrollArea>
+    </ScrollArea>
     )
 }
 

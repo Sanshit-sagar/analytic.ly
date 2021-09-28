@@ -13,7 +13,6 @@ import {
 } from '../../hooks/useClicks'
 
 import { a, useSpring } from '@react-spring/web'
-
 import { StatisticsSkeleton } from './Skeleton'
 
 import { 
@@ -85,8 +84,6 @@ const AnimatedStat = ({ index, name, value, leader = '' }: IStats) => {
 
 
 const AnimatedNumerical = ({ result }: ISpringNumber) => {
-    // const [darkMode] = useAtom(darkModeAtom)
-
     if(!result || result===undefined) return <a.h1> 0 </a.h1>
     const props = useSpring({ from: { result: 0 }, result, reset: true })
 

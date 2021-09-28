@@ -17,7 +17,7 @@ import { Box } from '../../primitives/Box'
 import { Flex } from '../../primitives/Flex'
 import { Text } from '../../primitives/Text'
 
-import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { darkModeAtom } from '../../pages/index'
 
 import { format } from '../../lib/utils/d3time'
@@ -189,7 +189,7 @@ const darkTheme = buildChartTheme(({
 } as unknown) as ThemeConfig);
 
 const XYGraph = ({ amount, range, interval }: TimeseriesProps) => {
-    const [darkMode] = useAtom(darkModeAtom);
+    const darkMode = useAtomValue(darkModeAtom);
 
     const { clicks, minTimestamp, loading, error } = useClickHistoryForUser(amount, range, interval);
 

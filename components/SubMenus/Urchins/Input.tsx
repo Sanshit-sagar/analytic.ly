@@ -2,24 +2,21 @@ import { styled } from '../../../stitches.config'
 
 import React, { useState } from 'react'
 
-import { useAsyncList } from '@react-stately/data'
-import { ComboBox } from '../../../compositions/ComboBox'
-import { Item } from '@react-stately/collections' 
-import { useFilter } from '@react-aria/i18n'
-import { useFocusWithin } from '@react-aria/interactions'
+import { atom, useAtom } from 'jotai'
+// import { useUpdateAtom, useAtomValue } from 'jotai/utils'
+import { useUser } from '@clerk/clerk-react'
 
 import { Text } from '../../../primitives/Text'
 import { Flex } from '../../../primitives/Flex'
-import { Button } from '../../../primitives/Button'
-import { Tooltip } from '../../../primitives/Tooltip'
-import { Loading } from '../../Loading'
 
-import { useAtom } from 'jotai'
-import { humanReadable } from '../../../lib/utils/dateUtils'
+import { useFilter } from '@react-aria/i18n'
+import { useAsyncList } from '@react-stately/data'
+// import { useHover } from '@react-aria/interactions'
+// import { useFocusWithin } from '@react-aria/interactions'
 
+import { Item } from '@react-stately/collections' 
+import { ComboBox } from '../../../compositions/ComboBox'
 
-import { useUser } from "@clerk/clerk-react"
-import { EyeOpenIcon, StarIcon, TrashIcon } from '@radix-ui/react-icons'
 
 import { 
     UrchinAtom, 
@@ -34,12 +31,11 @@ import {
     seoSourceAtom,
     seoMediumAtom,
     seoContentAtom,
-    seoCampaignAtom
+    seoCampaignAtom,
+    // focussedParamAtom,
+    // hoveredParamAtom,
+    // clickedParamAtom
 } from '../../../atoms/urchins'
-
-// import { useMutate } from '../../../hooks/useMutate'
-// import { ComboBoxProps } from '@react-types/combobox'
-// import { IntrinsicElement } from '@stitches/react/types/styled'
 
 const UrchinGroupContainer = styled(Flex, {
     width: '100%', 
@@ -49,54 +45,6 @@ const UrchinGroupContainer = styled(Flex, {
     gap: '$1'
 })
 
-const UrchinInfoContainer = styled(Flex, {
-    width: '100%', 
-    fd: 'column', 
-    jc: 'flex-start', 
-    ai: 'stretch',
-    gap: '$2'
-})
-
-const UrchinHeader = styled(Text, {
-    fontSize: '$3',
-    color: '$text', 
-    textDecoration: 'underline', 
-    textDecorationColor: '$text'
-}) 
-
-const UrchinStatistic = styled(Flex, {
-    color: '$funkyText', 
-    display: 'flex', 
-    fd: 'row', 
-    jc: 'flex-start', 
-    ai: 'center',
-    gap: '$1'
-})
-
-const UrchinStatisticsRow = styled(Flex, {
-    width: '100%', 
-    fd: 'row', 
-    jc: 'flex-start', 
-    ai: 'center', 
-    gap: '$1'
-});
-
-const UrchinTimeAgo = styled(Text, {
-    width: '100%',
-    margin: 0,
-    padding: 0, 
-    display: 'inline-flex',
-    fd: 'row', 
-    jc: 'space-between', 
-    ai: 'flex-end'
-});
-
-const DeleteButtonText = styled(Text, {
-    color: 'red', 
-    '&:hover': { 
-        color: 'magenta' 
-    } 
-});
 
 const urchinAtoms: UrchinAtom[] = [
     { key: '1', category: UrchinCategoryEnum.MEDIUM, atom: seoMediumAtom },
@@ -107,26 +55,6 @@ const urchinAtoms: UrchinAtom[] = [
 ]
 
 type NewUrchin = Omit<SavedUrchin, 'key'>;
-
-interface ApiResponse {
-    cursor: string | undefined;
-    previous: string | undefined;
-    next: string | undefined;
-    data: string | undefined; 
-}
-
-const initApiResponseObj = { 
-    cursor: undefined, 
-    previous: undefined,
-    next: undefined,
-    data: undefined,
-};
-
-type DeleteButtonProps = { 
-    itemName: string; 
-    children: React.ReactNode; 
-    handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void; 
-};
 
 
 function NewUrchinFactory(label: UrchinCategoryType, initValue: string, listIndex: number): NewUrchin {
@@ -142,29 +70,17 @@ function NewUrchinFactory(label: UrchinCategoryType, initValue: string, listInde
         slugs: ['tester_slug'],
     };
 }
-
-const DeleteButton = (props: DeleteButtonProps) => {
-    const { children, itemName, handleClick } = props;
-    
-    return (
-        <Tooltip content={`Delete ${itemName}?`}>
-            <Button size='xsmall' color='transparent' onClick={handleClick} css={{ fontSize: '$1' }}>
-                <DeleteButtonText>
-                    {children}
-                </DeleteButtonText>
-            </Button>
-        </Tooltip>
-    );
-}
-
-type LoadingStateType = 'loading' | 'loadingMore' | 'sorting' | 'filtering' | 'idle' 
+// interface HoverEvent {
+//     type: 'hoverstart' | 'hoverend';
+//     pointerType: 'mouse' | 'pen';
+//     target: HTMLElement; 
+// }
 
 export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoint }: IUrchinListProps) => {    
     const [error, setError] = useState<Error | null>(null)
     const [selectedKey, setSelectedKey] = useState<Key>('a')
-    const [isFocusWithin, setFocusWithin] = useState<boolean>(false)
-    const [response, setResponse] = useState<ApiResponse>(initApiResponseObj)
-    
+ 
+    let { contains } = useFilter({ sensitivity: 'base' })
 
     let list = useAsyncList<NewUrchin, string>({ 
         async load({ signal, cursor }) {
@@ -177,27 +93,31 @@ export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoin
             }
         }
     })
-
-    // let { service, mutate } = useMutate()
-    let { contains } = useFilter({ sensitivity: 'base' })
-
-    let { focusWithinProps } = useFocusWithin({
-        onFocusWithin: (_event: React.FocusEvent<Element>) => setFocusWithin(true),
-        onBlurWithin: (_event: React.FocusEvent<Element>) => setFocusWithin(false),
-        onFocusWithinChange: (isFocusWithin: boolean) => setFocusWithin(isFocusWithin)
-    })
    
-    let filteredItems: NewUrchin[] = React.useMemo(() => {
-        return list.items.filter((item: NewUrchin) => contains(item.name, filterValue))
-     }, [list, filterValue])
+    let filteredItems: ComboBoxItem[] = React.useMemo(() => {
+        return list.items
+            .filter((item: NewUrchin) => contains(item.name, filterValue))
+            .map((matchedItem: NewUrchin) => {
+                return {
+                    id: matchedItem.id,
+                    name: matchedItem.name
+                }
+            }); 
+    }, [list, filterValue])
 
   
     // STATE METHOD IMPLEMENTATIONS / EVENT HANDLERS
-    let onSelectionChange = (key: Key) => {
-        let selectedItem: NewUrchin = list.items.find((item: NewUrchin) => item.id===key) || list.items[0]
+    let onSelectionChange = (key: Key): any => {
+        let selectedItem: NewUrchin = list.items.find((item: NewUrchin) => (item.id===key)) || list.items[0]
         setSelectedKey(key)
         setFilterValue(selectedItem?.name ?? '')
     }
+    
+
+    // let onFocusChange = (isFocused: boolean) => {
+    //     setFocus(isFocused)
+    // }
+
     let isLoading = () => React.useMemo(() => {
         if(list?.loadingState==='loading') return true
         if(list?.loadingState==='loadingMore') return true
@@ -217,7 +137,12 @@ export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoin
         setError(null)
     }
 
-    const handleRemove = () => list.removeSelectedItems();
+    // const handleRemove = () => list.removeSelectedItems();
+
+    interface ComboBoxItem {
+        id: string; 
+        name: string; 
+    }
 
     if(isLoading()) return <Text> Loading... </Text>
     if(error) return <Text> Error! </Text> 
@@ -229,39 +154,21 @@ export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoin
             placeholder={`Enter a ${label}`}
             selectedKey={selectedKey}
             onSelectionChange={onSelectionChange}
-            items={filteredItems}
+            items={[...filteredItems]}
             inputValue={filterValue}
             onInputChange={setFilterValue}
             commit={handlePersist}
-            {...focusWithinProps} 
+            disallowEmptySelection
         >
-            {(item: NewUrchin) => (
+            {(item: ComboBoxItem) => (
                 <Item key={item.id}>
-                    <UrchinInfoContainer>
-                        <UrchinHeader> {item.name} </UrchinHeader>
-
-                        <UrchinStatisticsRow> 
-                            <UrchinStatistic>
-                                <StarIcon />  {(item.frequency * 100).toPrecision(1)}
-                            </UrchinStatistic>
-                            <UrchinStatistic>  
-                                <EyeOpenIcon /> {(item.frequency * 100).toPrecision(1)} 
-                            </UrchinStatistic>
-                        </UrchinStatisticsRow> 
-
-                        <UrchinTimeAgo> 
-                            <Text size='1'>{humanReadable(item.updatedAt)} </Text>
-                            <DeleteButton itemName={item.name} handleClick={handleRemove}>
-                                <TrashIcon aria-hidden="true" />
-                            </DeleteButton> 
-                        </UrchinTimeAgo>
-
-                    </UrchinInfoContainer>
+                    {item.name}
                 </Item>
             )}
         </ComboBox>
     )
 }
+
 
 export const SeoParamsInput = () => {  
     const { user, isSignedOut, isLoading } = useUser({ withAssertions: true })
@@ -273,7 +180,7 @@ export const SeoParamsInput = () => {
         <UrchinGroupContainer>
             {urchinAtoms.map((atomicUrchin: UrchinAtom) => {
                 let { key, category, atom }: UrchinAtom = atomicUrchin
-                let [value, setValue] = useAtom(atom)
+                const [value, setValue] = useAtom(atom)
 
                 return (
                     <UtmParamInput 

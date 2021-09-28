@@ -30,19 +30,6 @@ export { Item, Section } from '@react-stately/collections'
 import { AriaComboBoxProps } from '@react-aria/combobox'
 import { InfoCircledIcon as InfoIcon } from '@radix-ui/react-icons'
 
-// const StyledPopoverContainer = styled(Flex, {
-//     position: 'absolute',
-//     top: '100%',
-//     width: '100%',
-//     zIndex: 1,
-//     border: '2px solid $border',
-//     '&:hover': {
-//         borderColor: '$border3'
-//     },
-//     br: '$1',
-//     mt: '$2',
-//     bc: 'transparent'
-// }); 
 
 const FilteredResults = styled(Flex, {
     width: '100%', 
@@ -52,29 +39,6 @@ const FilteredResults = styled(Flex, {
     mt: 0, 
     gap: '$1'
 });
-
-const AllResults = styled(Flex, {
-    width: '100%', 
-    fd: 'column',
-    jc: 'flex-start', 
-    ai: 'flex-end', 
-    mt: '$1', 
-    gap: '$1',
-    fontSize: '$1',
-    color: '$funkyText',
-}); 
-
-export enum PopoverVariantTypeEnum {
-    SMALL = 'small',
-    MEDIUM = 'medium',
-    LARGE = 'large'
-}
-
-export type PopoverVariantType = 
-    | PopoverVariantTypeEnum.SMALL 
-    | PopoverVariantTypeEnum.MEDIUM 
-    | PopoverVariantTypeEnum.LARGE
-
 
 const FlexInlineBlock = styled('div', {
     position: 'relative',

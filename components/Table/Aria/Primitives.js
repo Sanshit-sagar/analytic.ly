@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react'
-import { useFocusRing } from '@react-aria/focus'; 
-import { mergeProps } from '@react-aria/utils';
+
+
 import {
     useTableCell, 
     useTableColumnHeader, 
@@ -11,15 +11,12 @@ import {
     useTableSelectionCheckbox
 } from '@react-aria/table'
 
-import { useToggleState } from '@react-stately/toggle';
-import { useCheckbox } from '@react-aria/checkbox';
-
 import { Box } from '../../../primitives/Box'
 import { Th, Tr, Td } from '../../../primitives/Table'
 
-import { darkModeAtom } from '../../../pages/index' 
-import { useAtom } from 'jotai'
-
+import { mergeProps } from '@react-aria/utils';
+import { useCheckbox } from '@react-aria/checkbox'
+import { useToggleState } from '@react-stately/toggle'
 
 export function TableRowGroup({type: Element, style, children}) {
   let {rowGroupProps} = useTableRowGroup();
@@ -49,8 +46,6 @@ export function TableColumnHeader({column, state}) {
   let {isFocusVisible, focusProps} = useFocusRing()
   let arrowIcon = dir==='ascending' ?  '▲' : '▼'
 
-  const [darkMode] = useAtom(darkModeAtom)
-
   return (
     <Th
         {...focusProps}
@@ -74,8 +69,6 @@ export function TableRow({item, children, state}) {
   let {rowProps} = useTableRow({node: item}, state, ref);
   let {isFocusVisible, focusProps} = useFocusRing();
 
-  const [darkMode] = useAtom(darkModeAtom)
-
   return (
     <Tr
       {...mergeProps(rowProps, focusProps)}
@@ -87,11 +80,9 @@ export function TableRow({item, children, state}) {
 }
 
 export function TableCell({cell, state}) {
-  let ref = useRef();
-  let {gridCellProps} = useTableCell({node: cell}, state, ref);
-  let {isFocusVisible, focusProps} = useFocusRing();
-
-  const [darkMode] = useAtom(darkModeAtom)
+  let ref = useRef()
+  let {gridCellProps} = useTableCell({node: cell}, state, ref)
+  let {isFocusVisible, focusProps} = useFocusRing()
 
   return (
     <Td

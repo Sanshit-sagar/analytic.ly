@@ -13,8 +13,6 @@ import { useTableState } from '@react-stately/table';
 import  { useTable } from '@react-aria/table'
 
 import { Box } from '../../../primitives/Box'
-import { darkModeAtom } from '../../../pages/index' 
-import { useAtom } from 'jotai'
 
 
 function AriaTable(props) {
@@ -22,8 +20,6 @@ function AriaTable(props) {
     let ref = useRef();
     let {collection} = state;
     let {gridProps} = useTable(props, state, ref);
-
-    const [darkMode] = useAtom(darkModeAtom)
   
     return (
     <Box 

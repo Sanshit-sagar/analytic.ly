@@ -6,6 +6,7 @@ import { SunIcon, MoonIcon } from '@radix-ui/react-icons'
 import { Flex } from '../../primitives/Flex'
 import { Tooltip } from '../../primitives/Tooltip'
 import { IconButton } from '../../primitives/IconButton'
+
 import { darkModeAtom } from '../../pages/index'
 import { themes, activeThemeIndexAtom } from '../Swatch'
 import { Switch, SwitchThumb } from '../../primitives/Switch'
