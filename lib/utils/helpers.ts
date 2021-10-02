@@ -9,7 +9,11 @@ export interface NextApiRequestExtended extends NextApiRequest {
     email: string | string[];
     name: string | string[];
     image: string | string[]; 
-    slug: string | string[]; 
+    slug: string | string[];
+    session: {
+        userId: string; 
+        primaryEmailAddressId: string | undefined;
+    }
 }
 
 export default function getHandler() {
@@ -21,18 +25,15 @@ export default function getHandler() {
             res.status(405).json({ error: `Method ${req.method} not allowed on the path`}); 
         },
         attachParams: true,
-    }).use((req, res, next) => {
-            // TODO: call await getSession() here
-            req.email = '';
-            req.name = '';
-            req.image = ''; 
-
-            // TODO if(!session) { next(); } -> ?? throw a 403?
-
-            req.email = req.query.email || ''
-            req.name = req.query.name || ''
-            req.slug = req.query.slug || ''
-            
-            next(); 
-    }); 
+    }).use((req: NextApiRequestExtended, res: NextApiResponse, next) => {
+        let name = ''
+        let email = ''
+        let image = '' 
+        
+        req.email = email || req.query.email || ''
+        req.name = name || req.query.name || ''
+        req.image = image || req.query.slug || ''
+        
+        next(); 
+    });
 }

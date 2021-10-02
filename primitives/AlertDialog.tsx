@@ -1,7 +1,10 @@
 import React from 'react';
 import { styled, keyframes } from '../stitches.config'
 import { blackA } from '@radix-ui/colors'
-import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
+
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
+
+import { Flex } from './Flex'
 
 const overlayShow = keyframes({
     '0%': { opacity: 0 },
@@ -22,7 +25,13 @@ const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
     },
 });
 
-function Root({ children, ...props }) {
+function Root({ 
+    children, 
+    ...props 
+}: { 
+    children: React.ReactNode; 
+    props: any[] | any | undefined | null; 
+}) {
   return (
     <AlertDialogPrimitive.Root {...props}>
       <StyledOverlay  />
@@ -32,7 +41,8 @@ function Root({ children, ...props }) {
 }
 
 const StyledContent = styled(AlertDialogPrimitive.Content, {
-    bc: 'white',
+    backgroundColor: '$panel', 
+    text: '$funkyText',
     br: 6,
     boxShadow: 'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
     position: 'fixed',
@@ -82,7 +92,6 @@ const AlertButton = styled('button', {
                 backgroundColor: 'white',
                 color: '$white',
                 border: '1px solid $accent',
-                mr: 10,
                 '&:hover': {
                     backgroundColor: 'gainsboro',
                     borderColor: '$accentHover',
@@ -128,7 +137,14 @@ const AlertButton = styled('button', {
     defaultVariants: {
         variant: 'accent',
     },
-});
+})
+
+const StyledActions = styled(Flex, {
+    fd: 'row',
+    jc: 'flex-end',
+    ai: 'flex-end',
+    gap: '$2',
+})
 
 
 export const AlertDialog = Root
@@ -139,4 +155,4 @@ export const AlertDialogDescription = StyledDescription
 export const AlertDialogAction = AlertDialogPrimitive.Action
 export const AlertDialogCancel = AlertDialogPrimitive.Cancel
 export const AlertDialogButton = AlertButton
-
+export const AlertDialogActionsRow = StyledActions

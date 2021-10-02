@@ -3,7 +3,9 @@ import { styled } from '../../../stitches.config'
 import React, { useState } from 'react'
 
 import { atom, useAtom } from 'jotai'
-// import { useUpdateAtom, useAtomValue } from 'jotai/utils'
+import { useUpdateAtom } from 'jotai/utils'
+import { updateSearchParamsAtom } from '../data'
+
 import { useUser } from '@clerk/clerk-react'
 
 import { Text } from '../../../primitives/Text'
@@ -70,13 +72,11 @@ function NewUrchinFactory(label: UrchinCategoryType, initValue: string, listInde
         slugs: ['tester_slug'],
     };
 }
-// interface HoverEvent {
-//     type: 'hoverstart' | 'hoverend';
-//     pointerType: 'mouse' | 'pen';
-//     target: HTMLElement; 
-// }
+
 
 export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoint }: IUrchinListProps) => {    
+    const updateSearchParams = useUpdateAtom(updateSearchParamsAtom)
+
     const [error, setError] = useState<Error | null>(null)
     const [selectedKey, setSelectedKey] = useState<Key>('a')
  
@@ -111,12 +111,13 @@ export const UtmParamInput = ({ key, label, filterValue, setFilterValue, endpoin
         let selectedItem: NewUrchin = list.items.find((item: NewUrchin) => (item.id===key)) || list.items[0]
         setSelectedKey(key)
         setFilterValue(selectedItem?.name ?? '')
+        
+        if(selectedItem?.name) {
+            updateSearchParams({ param: `utm_${label}`, value: selectedItem.name, action: 'append' })
+        } else {
+            updateSearchParams({ param: `utm_${label}`, value: selectedItem.name, action: 'delete' })
+        }
     }
-    
-
-    // let onFocusChange = (isFocused: boolean) => {
-    //     setFocus(isFocused)
-    // }
 
     let isLoading = () => React.useMemo(() => {
         if(list?.loadingState==='loading') return true

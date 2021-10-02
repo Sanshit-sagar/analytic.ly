@@ -1,50 +1,81 @@
 import React from 'react';
 
 import {
-    AlertDialog as AlertDialogRoot,
+    AlertDialog,
     AlertDialogTrigger,
     AlertDialogContent,
     AlertDialogTitle,
     AlertDialogDescription,
     AlertDialogAction,
     AlertDialogCancel,
-    AlertDialogButton
+    AlertDialogButton,
+    AlertDialogActionsRow
 } from '../primitives/AlertDialog'
-import { Flex } from '../primitives/Flex'
 
-export const AlertDialog = () => (
-    <AlertDialogRoot>
+import { Separator } from '../primitives/Separator'
+
+interface AlertProps {
+    trigger: React.ReactNode; 
+    title: string; 
+    description?: string | undefined; 
+    content: React.ReactNode;
+    cancelText: string | undefined;
+    confirmText: string | undefined;
+    handleCancel: () => void; 
+    handleConfirm: () => void;
+}; 
+
+export type ActionType = 'cancel' | 'confirm'
+
+export const Alert = ({
+    trigger,
+    title,
+    description = '',
+    content,
+    cancelText = 'Cancel',
+    confirmText = 'Confirm',
+    handleCancel,
+    handleConfirm
+}: AlertProps) => (
+    <AlertDialog props={[]}>
         <AlertDialogTrigger asChild>
             <AlertDialogButton>
-                Delete account
+                {trigger}
             </AlertDialogButton>
         </AlertDialogTrigger>
+        <AlertDialogContent>
 
-        <AlertDialogContent >
-            <AlertDialogTitle>
-                Are you absolutely sure?
+            <AlertDialogTitle> 
+                {title} 
             </AlertDialogTitle>
-
-            <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your account and remove your data
-                from our servers.
+            <AlertDialogDescription> 
+                {description} 
             </AlertDialogDescription>
+            
+            <Separator orientation='horizontal' />
 
-            <Flex css={{ jc: 'flex-end' }}>
+            <> {content} </> 
+
+            <AlertDialogActionsRow>
                 <AlertDialogCancel asChild>
                     <AlertDialogButton 
-                        variant="accent" 
-                        css={{ marginRight: 25 }}
+                        variant='cancel'
+                        onClick={handleCancel}
                     >
-                      Cancel
+                        {cancelText}
                     </AlertDialogButton>
                 </AlertDialogCancel>
+                
                 <AlertDialogAction asChild>
-                    <AlertDialogButton variant="accent">
-                        Yes, delete account
+                    <AlertDialogButton 
+                        variant='accent' 
+                        onClick={handleConfirm}
+                    >
+                        {confirmText}
                     </AlertDialogButton>
                 </AlertDialogAction>
-            </Flex>
+            </AlertDialogActionsRow> 
+
         </AlertDialogContent>
-    </AlertDialogRoot>
-)
+    </AlertDialog>
+);
