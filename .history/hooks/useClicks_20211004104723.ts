@@ -148,7 +148,7 @@ export const useUserStatistics = () => {
 }
 
 export const useUserSummary = () => {
-    let summaryEndpoint = `/api/users/sanshit.sagar@gmail.com/summary`
+    let summaryEndpoint = `http://localhost:3000/api/users/sanshit.sagar@gmail.com/summary`
     const { data, error } = useSWR(summaryEndpoint)
 
     return {

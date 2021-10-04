@@ -137,7 +137,7 @@ export const useGeodata = (fetchStats: boolean = false, mode?: string) => {
 }
 
 export const useUserStatistics = () => {
-    let statisticsEndpoint = `/api/users/sanshit.sagar@gmail.com/statistics`
+    let statisticsEndpoint = `http://localhost:3000/api/users/sanshit.sagar@gmail.com/statistics`
     const { data, error } = useSWR(statisticsEndpoint)
 
     return {
@@ -148,7 +148,7 @@ export const useUserStatistics = () => {
 }
 
 export const useUserSummary = () => {
-    let summaryEndpoint = `/api/users/sanshit.sagar@gmail.com/summary`
+    let summaryEndpoint = `http://localhost:3000/api/users/sanshit.sagar@gmail.com/summary`
     const { data, error } = useSWR(summaryEndpoint)
 
     return {
