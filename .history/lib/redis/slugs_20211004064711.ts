@@ -40,8 +40,7 @@ export async function getUniqueVisitorsFromSlugs(userSlugsWithScores: { props: s
 
     let userUniquesBySlug: any = userSlugsWithScores?.rankings.map((sr: SlugRankings, _: number) => {
         return sr.rankings.map((srr) => {
-            let uniqueSlug = typeof srr==='string' ? srr : srr.title
-            return slugsToFetch.push(uniqueSlug) ?? [];
+            return slugsToFetch.push(unique) ?? [];
         });
     });
 

@@ -133,6 +133,7 @@ export function SearchBar<T>(props: ISearchBarProps<T>) {
             aria-label={props.label}
             excludeFromTabOrder={false}
         >
+        
             {utmCategories.map((category: UtmCategory, cIndex: number) => {
                 if(!userLibrary || !userLibrary[category]?.length) return null;
                 if(!userLibrary[category] || !userLibrary[category]?.length) return null;

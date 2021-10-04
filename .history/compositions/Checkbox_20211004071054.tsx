@@ -1,3 +1,5 @@
+import { styled } from '../stitches.config'
+
 import { Flex } from '../primitives/Flex'
 import { 
     Checkbox as CheckboxPrimitive, 
@@ -44,3 +46,12 @@ export const Checkbox = (props: CheckboxProps) => {
         </Flex>
     ); 
 }
+  
+
+// asChild = false,
+// defaultChecked,
+// disabled,
+// required,
+// name,
+// value = 'on',
+// forceMount

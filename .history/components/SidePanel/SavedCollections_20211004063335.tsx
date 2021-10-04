@@ -8,6 +8,7 @@ import { Tree } from '../../compositions/Tree'
 import { Box } from '../../primitives/Box'
 
 import { useSlugDetails } from '../../hooks/useSavedCollections'
+import { Loading } from '../Loading/Halogen'
 
 import {
     useSavedSlugs, 

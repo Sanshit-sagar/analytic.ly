@@ -123,7 +123,7 @@ export function SearchBar<T>(props: ISearchBarProps<T>) {
     if(!userLibrary || !Object.keys(userLibrary)) return <Text> No data to show </Text>
 
     return (
-          // @ts-ignore
+        
         <SearchAutocomplete 
             label={props.label || 'Search'} 
             placeholder='Looking for something?' 
@@ -133,6 +133,7 @@ export function SearchBar<T>(props: ISearchBarProps<T>) {
             aria-label={props.label}
             excludeFromTabOrder={false}
         >
+            // @ts-ignore
             {utmCategories.map((category: UtmCategory, cIndex: number) => {
                 if(!userLibrary || !userLibrary[category]?.length) return null;
                 if(!userLibrary[category] || !userLibrary[category]?.length) return null;

@@ -17,8 +17,8 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 interface IntervalProps {
     menuName: string;
-    openAtom: PrimitiveAtom<boolean>;
-    selectedIndexAtom: PrimitiveAtom<number>; 
+    openAtom: Atom<boolean>;
+    selectedIndexAtom: Atom<number>; 
     selectionOptions: SelectionOption[];
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { PrimitiveAtom, useAtom } from 'jotai'
+import { Atom, useAtom } from 'jotai'
 
 import { 
     SelectRoot, 
@@ -17,8 +17,8 @@ import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 interface IntervalProps {
     menuName: string;
-    openAtom: PrimitiveAtom<boolean>;
-    selectedIndexAtom: PrimitiveAtom<number>; 
+    openAtom: Atom<boolean>;
+    selectedIndexAtom: Atom<number>; 
     selectionOptions: SelectionOption[];
 }
 

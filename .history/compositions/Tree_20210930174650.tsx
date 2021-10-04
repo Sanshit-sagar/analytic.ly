@@ -81,6 +81,16 @@ export const Tree = memo<TreePropsType>(({
                     <Text size='1' css={{ verticalAlign: 'middle', color: '$funkyText' }}> 
                         {name} 
                     </Text>
+                
+                    {/* <Flex css={{ fd: 'row', jc: 'flex-end', ai: 'flex-start', gap: '$1' }}>
+                        {actionable && <> 
+                            <Text css={{ color: 'yellow'}}> <StarIcon /></Text>
+                            <Text css={{ color: 'red'}}><TrashIcon />  </Text> 
+                        </>}
+
+                        <>{linkable && <Text css={{ color: 'blue' }}> <Link1Icon /></Text>}</>
+                    </Flex> */}
+                
                 </Box>
             </Flex>
 

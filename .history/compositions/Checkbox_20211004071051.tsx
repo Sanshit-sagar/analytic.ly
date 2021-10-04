@@ -1,3 +1,5 @@
+import { styled } from '../stitches.config'
+
 import { Flex } from '../primitives/Flex'
 import { 
     Checkbox as CheckboxPrimitive, 

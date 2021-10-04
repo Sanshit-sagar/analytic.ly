@@ -44,3 +44,12 @@ export const Checkbox = (props: CheckboxProps) => {
         </Flex>
     ); 
 }
+  
+
+// asChild = false,
+// defaultChecked,
+// disabled,
+// required,
+// name,
+// value = 'on',
+// forceMount

@@ -61,13 +61,13 @@ export async function getClickstreamOnDate(date: Date, isAsc: boolean): Promise<
     let dateEnd = setTimeForDate(dateObj,23,59,59); 
     let timestampEnd = dateEnd.getTime();
 
-    return await getDoubleEndedClickstream(timestampStart, timestampEnd, undefined, undefined); 
+    return await getDoubleEndedClickstream(timestampStart, timestampEnd, undefined, isAsc); 
 }
 
 function filterClickstreamBySlugOrUser(results: any[], filterValue: string, filterColumn: string) {
     let output: any[] = [];
     let frequencies: Map<string, number> = new Map<string, number>();
-    let dates: { [key: string]: boolean } = {}
+    let dates; { [string]: boolean } = {}
     let minTimestamp = new Date().getTime();
     let maxTimestamp = new Date(1,1,1970).getTime();
 

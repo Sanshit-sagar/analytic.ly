@@ -38,12 +38,7 @@ export async function getUniqueVisitorsFromSlugs(userSlugsWithScores: { props: s
     let slugsToFetch: string[] = [];
     let totalUniqueViews: number = 0;
 
-    let userUniquesBySlug: any = userSlugsWithScores?.rankings.map((sr: SlugRankings, _: number) => {
-        return sr.rankings.map((srr) => {
-            let uniqueSlug = typeof srr==='string' ? srr : srr.title
-            return slugsToFetch.push(uniqueSlug) ?? [];
-        });
-    });
+    let userUniquesBySlug: any = userSlugsWithScores?.rankings.map((sr: SlugRankings, _: number) => sr.rankings.map(srr) => slugsToFetch.push() ?? [];
 
     slugsToFetch.map(async function(stf: string, _) {
         let uniqueViews: number = await redis.zcard(`slug.${sanitizeSlug(stf)}.clickcount`);

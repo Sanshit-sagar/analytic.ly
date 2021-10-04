@@ -85,7 +85,7 @@ export function formatTimestamp(timestamp: string | number | null) {
     let fmtTimestamp = parseInt(`${timestamp}`) 
 
     return { 
-        'timeAgo': fmtTimestamp ? humanReadable(new Date(fmtTimestamp)) : '-', 
+        'timeAgo': fmtTimestamp ? humanReadable(fmtTimestamp) : '-', 
         'localeTime': fmtTimestamp ? new Date(fmtTimestamp).toLocaleString() : '-'
     };
 }

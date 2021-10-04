@@ -123,7 +123,7 @@ export function SearchBar<T>(props: ISearchBarProps<T>) {
     if(!userLibrary || !Object.keys(userLibrary)) return <Text> No data to show </Text>
 
     return (
-          // @ts-ignore
+        
         <SearchAutocomplete 
             label={props.label || 'Search'} 
             placeholder='Looking for something?' 

@@ -6,6 +6,9 @@ import {
     HoverCardArrow
 } from '../primitives/HoverCard'
 
+// type HoverSideType = 'top' | 'bottom' | 'left' | 'right';
+// type HoverAlignType = 'start' | 'end' | 'center'
+
 export const HoverCard = ({ 
     trigger, 
     content 

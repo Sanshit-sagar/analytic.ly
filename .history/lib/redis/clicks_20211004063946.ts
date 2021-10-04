@@ -61,7 +61,7 @@ export async function getClickstreamOnDate(date: Date, isAsc: boolean): Promise<
     let dateEnd = setTimeForDate(dateObj,23,59,59); 
     let timestampEnd = dateEnd.getTime();
 
-    return await getDoubleEndedClickstream(timestampStart, timestampEnd, undefined, undefined); 
+    return await getDoubleEndedClickstream(timestampStart, timestampEnd, undefined, und); 
 }
 
 function filterClickstreamBySlugOrUser(results: any[], filterValue: string, filterColumn: string) {
