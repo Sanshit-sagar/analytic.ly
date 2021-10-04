@@ -8,7 +8,7 @@ import { getTicksInRange, getRangeBoundaries, getLabelsFromBounds } from '../../
 import { calibrateCache } from '../../../lib/redis/admin'
 import { merge } from '../../../lib/utils/mergers'
 
-// import { requireSession, users } from '@clerk/nextjs/api'
+import { requireSession, users } from '@clerk/nextjs/api'
 
 export default getHandler()
     .get('/api/metrics/user/:email/clickstream/:time/:unit', async (req: NextApiRequestExtended, res: NextApiResponse) => {
@@ -63,7 +63,8 @@ export default getHandler()
         const interval: string = req.params.interval
         
         if(slug && range) {
-            const { views, minTimestamp, maxTimestamp } = await getDoubleEndedClickstream(0, -1, slug, 'slug', true);
+            const { views, 
+                minTimestamp, maxTimestamp } = await getDoubleEndedClickstream(0, -1, slug, 'slug', true);
             const boundaries: number[] = getRangeBoundaries(amount, range, interval); 
             const ticksInRange: number[] = getTicksInRange(boundaries[0], boundaries[1], interval, interval);
             const { mergedIntervals, viewsByIntervals, bounds, numPeriods, numClicks } = merge(views, boundaries, ticksInRange, interval); 
@@ -156,7 +157,7 @@ export default getHandler()
             try {
                  const clicks = await getClickstream(email);
                  res.status(200).json({ clicks })
-            } catch(error: any) {
+            } catch(error: { error: undefined | { message: string }}) {
                  res.status(500).json({ error: `${error?.message ?? ''}`})
             }
         } else {

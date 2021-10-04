@@ -22,6 +22,10 @@ function getUserDetails(user: any) {
     }; 
 }
 
+type UserViews = {
+     userSlugs: string[]; 
+}
+
 
 const checkSlugHasViews = async (slug: string) => {
     return new Promise(async (resolve, reject) => {

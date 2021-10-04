@@ -1,5 +1,6 @@
 import { atom, WritableAtom } from 'jotai'
 
+
 const format = (d: Date | undefined) => !d || d===undefined ? 'n/a' : `${d?.getFullYear()}/${d.getMonth()}/${d.getDate()}`
 
 enum StageTypeEnum {

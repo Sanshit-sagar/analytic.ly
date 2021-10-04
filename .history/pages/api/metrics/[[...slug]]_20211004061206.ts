@@ -156,7 +156,7 @@ export default getHandler()
             try {
                  const clicks = await getClickstream(email);
                  res.status(200).json({ clicks })
-            } catch(error: any) {
+            } catch(error:  undefined | { message: string }}) {
                  res.status(500).json({ error: `${error?.message ?? ''}`})
             }
         } else {

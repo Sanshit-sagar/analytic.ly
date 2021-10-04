@@ -8,7 +8,7 @@ import { getTicksInRange, getRangeBoundaries, getLabelsFromBounds } from '../../
 import { calibrateCache } from '../../../lib/redis/admin'
 import { merge } from '../../../lib/utils/mergers'
 
-// import { requireSession, users } from '@clerk/nextjs/api'
+import { requireSession, users } from '@clerk/nextjs/api'
 
 export default getHandler()
     .get('/api/metrics/user/:email/clickstream/:time/:unit', async (req: NextApiRequestExtended, res: NextApiResponse) => {
@@ -122,8 +122,8 @@ export default getHandler()
              } else {
                  res.status(403).json({ error: `Bad Request please provide bound0 and bound1` });
              } 
-        } catch(error: any) {
-            res.status(500).json({ error: `${error?.message || ''}` })
+        } catch(error) {
+            res.status(500).json({ error: `${error.message}` })
         }
     })
     .get('/api/metrics/dates/every/:interval/from/:start/to/:end', async (req: NextApiRequestExtended, res: NextApiResponse) => {
@@ -156,7 +156,7 @@ export default getHandler()
             try {
                  const clicks = await getClickstream(email);
                  res.status(200).json({ clicks })
-            } catch(error: any) {
+            } catch(error: { error: undefined | { message: string }}) {
                  res.status(500).json({ error: `${error?.message ?? ''}`})
             }
         } else {

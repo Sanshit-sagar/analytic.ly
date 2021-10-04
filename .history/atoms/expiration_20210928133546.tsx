@@ -1,4 +1,5 @@
 import { atom, WritableAtom } from 'jotai'
+import { isValidDate } from '../lib/utils/dateUtils'
 
 const format = (d: Date | undefined) => !d || d===undefined ? 'n/a' : `${d?.getFullYear()}/${d.getMonth()}/${d.getDate()}`
 
