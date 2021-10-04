@@ -5461,7 +5461,12 @@
   dependencies:
     "crypto-extra" "1.0.1"
 
-"nanoid@^3.1.23":
+"nanocolors@^0.2.2":
+  "integrity" "sha512-SFNdALvzW+rVlzqexid6epYdt8H9Zol7xDoQarioEFcFN0JHo4CYNztAxmtfgGTVRCmFlEOqqhBpoFGKqSAMug=="
+  "resolved" "https://registry.npmjs.org/nanocolors/-/nanocolors-0.2.12.tgz"
+  "version" "0.2.12"
+
+"nanoid@^3.1.23", "nanoid@^3.1.25":
   "integrity" "sha512-rdwtIXaXCLFAQbnfqDRnI6jaRHp9fTcYBjtFKE8eezcZ7LuLjhUaQGNeMXf1HmRoCH32CLz6XwX0TtxEOS/A3Q=="
   "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.1.25.tgz"
   "version" "3.1.25"
@@ -5878,6 +5883,15 @@
   "version" "1.6.4"
   dependencies:
     "ts-pnp" "^1.1.6"
+
+"postcss@^8.2.15", "postcss@^8.3.8":
+  "integrity" "sha512-GT5bTjjZnwDifajzczOC+r3FI3Cu+PgPvrsjhQdRqa2kTJ4968/X9CUce9xttIB0xOs5c6xf0TCWZo/y9lF6bA=="
+  "resolved" "https://registry.npmjs.org/postcss/-/postcss-8.3.8.tgz"
+  "version" "8.3.8"
+  dependencies:
+    "nanocolors" "^0.2.2"
+    "nanoid" "^3.1.25"
+    "source-map-js" "^0.6.2"
 
 "postcss@8.2.15":
   "integrity" "sha512-2zO3b26eJD/8rb106Qu2o7Qgg52ND5HPjcyQiK2B98O388h43A448LCslC0dI2P97wCAQRJsFvwTRcXxTKds+Q=="
@@ -6438,6 +6452,11 @@
   dependencies:
     "map-obj" "^4.1.0"
     "to-snake-case" "^1.0.0"
+
+"source-map-js@^0.6.2":
+  "integrity" "sha512-/3GptzWzu0+0MBQFrDKzw/DvvMTUORvgY6k6jd/VS6iCR4RDTKWH6v6WPwQoUO8667uQEf9Oe38DxAYWY5F/Ug=="
+  "resolved" "https://registry.npmjs.org/source-map-js/-/source-map-js-0.6.2.tgz"
+  "version" "0.6.2"
 
 "source-map@^0.5.0":
   "integrity" "sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w="
