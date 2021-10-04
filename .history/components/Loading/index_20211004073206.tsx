@@ -35,7 +35,7 @@ const Spinner = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setValue((v) => (v === 9 ? 0 : v + 1));
+          setValue((v) => (v === 9 ? 0 : v + 1));
         }, 5000);
     }, []);
 
@@ -52,7 +52,7 @@ const Spinner = () => {
     let offset = c - (1 / 4) * c;
   
     return (
-        <svg
+      <svg
             {...progressBarProps}
             width={32}
             height={32}
@@ -79,19 +79,17 @@ const Spinner = () => {
                     repeatCount="indefinite"
                 />
             </circle>
-        </svg>
+      </svg>
     );
-}
+  }
 
 type LoadingType = 'spinner' | 'bar'
 
-interface LoadingProps {
+export const Loading = ({ isIndeterminate = true, value = 100, type }: { 
     isIndeterminate?: boolean; 
     value?: number; 
     type?: LoadingType;
-}
-
-export const Loading = ({ isIndeterminate = true, value = 100, type }: LoadingProps) => {
+}) => {
 
     const label = 'Loading...'
     const loadingValue = value && !isIndeterminate ? value : 100

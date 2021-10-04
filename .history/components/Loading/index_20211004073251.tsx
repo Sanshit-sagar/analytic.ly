@@ -35,7 +35,7 @@ const Spinner = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setValue((v) => (v === 9 ? 0 : v + 1));
+          setValue((v) => (v === 9 ? 0 : v + 1));
         }, 5000);
     }, []);
 
@@ -79,7 +79,7 @@ const Spinner = () => {
                     repeatCount="indefinite"
                 />
             </circle>
-        </svg>
+      </svg>
     );
 }
 

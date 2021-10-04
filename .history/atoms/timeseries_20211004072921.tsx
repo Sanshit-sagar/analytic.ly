@@ -176,7 +176,7 @@ export const activeFilteredDataAtom = atom(
 
         return      selectedStat.startsWith('timeseries')   ?   get(filteredDataAtom) 
                 :   selectedStat.startsWith('cummulative')  ?   get(cummulativeDataAtom) 
-                :   [];
+                :   ''
     }
 );
 

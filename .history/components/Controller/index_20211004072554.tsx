@@ -30,7 +30,7 @@ export const MapToggleGroup = () => {
     return (
         <ToolbarToggleGroup 
             type="single" 
-            value={`${selectedIndex}`}
+            value={`${selectedIndex}``
             onValueChange={handleChange} 
             aria-label="Text alignment"
             disabled={false}

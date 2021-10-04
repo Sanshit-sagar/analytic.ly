@@ -1,6 +1,5 @@
 import React from 'react'
 import useSWR from 'swr'
-import { Text } from '../../primitives/Text'
 
 interface SlugClickstreamProps {
     slug: string;

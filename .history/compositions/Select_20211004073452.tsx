@@ -62,5 +62,5 @@ export const Select = ({
                 </SelectContent>
             </SelectRoot>
         </Flex>
-    )
+);
 } 
