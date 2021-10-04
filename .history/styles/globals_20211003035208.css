@@ -1,0 +1,47 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1;
+}
+
+/*
+* clerk.dev custom components 
+*/
+
+.cl-auth-form-body input {
+    border: 0;
+    border-bottom: 1px solid #000;
+    padding: 0;
+}
+  
+.cl-auth-form-body input:focus {
+    border-bottom: 1px solid #312e81;
+}
+  
+.cl-auth-form-body label > span {
+    color: rgba(0, 0, 0, 1.0);
+    font-weight: normal;
+    transition: transform 0.25s;
+    transform: translateY(20px);
+}
+  
+.cl-auth-form-body label:focus-within > span,
+.cl-auth-form-body input:not([value=""]) + span {
+    transform: translateY(0px);
+}
+  
+.cl-oauth-button-group {
+    margin-bottom: 3em;
+}
+  
+.cl-oauth-button-group::after {
+    height: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+}
+  
+  

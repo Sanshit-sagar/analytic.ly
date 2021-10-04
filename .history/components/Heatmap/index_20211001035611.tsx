@@ -1,4 +1,0 @@
-import React from 'react'
-
-import { Group } from '@visx/group'
-import { scaleLinear } from '@visx/scaleLinear'

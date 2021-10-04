@@ -4,27 +4,25 @@ import { Flex } from '../../primitives/Flex'
 import { Skeleton } from '../../primitives/Skeleton'
 import { ScrollArea } from '../../primitives/ScrollArea'
 
+type CellVariantType = "cell" | "cellShort" | "cellLong" | "cellXLong" | "cellXShort"
+
 const NUM_ROWS = 20
 
-export const TableSkeleton = () => {
+export const TableSkeleton = () => (        
+    <ScrollArea>
+        <Skeleton variant='table'>
+            <Skeleton variant='tableHeader' /> 
 
-    return (
-        
-        <ScrollArea>
-            <Skeleton variant='table'>
-                <Skeleton variant='tableHeader' /> 
-
-                <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'stretch', gap: 0 }}>
-                    {[...Array(NUM_ROWS)].map((index: number) => (
-                        <RowSkeleton key={`Skeleton-for-table-row-at-index-${index}`} /> 
-                    ))}
-                </Flex>
-            </Skeleton>
-        </ScrollArea>
-    );
-}
-
-type CellVariantType = "cell" | "cellShort" | "cellLong" | "cellXLong" | "cellXShort"
+            <Flex css={{ fd: 'column', jc: 'flex-start', ai: 'stretch', gap: 0 }}>
+                {[...Array(NUM_ROWS)].map((index: number) => (
+                    <RowSkeleton 
+                        key={`Skeleton-for-table-row-index-${index}`} 
+                    /> 
+                ))}
+            </Flex>
+        </Skeleton>
+    </ScrollArea>
+)
 
 const RowSkeleton = () => {
     const cellSkeletonVariants: CellVariantType[] = ['cellXShort', 'cellShort', 'cell', 'cellLong', 'cellXLong']

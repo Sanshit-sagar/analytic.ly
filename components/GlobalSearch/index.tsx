@@ -11,19 +11,19 @@ import {
     terms, 
     contents, 
     campaigns, 
-    slugs, 
+    // slugs, 
     Urchin
 } from './mocks'
 
-type UrlParameterType = 'utm' | 'custom'
-enum UrlParameterEnum {
-    UTM = 'utm',
-    CUSTOM = 'custom',
-}; 
-interface IUrlParameter {
-    utm: { };
-    custom: any;
-}
+// type UrlParameterType = 'utm' | 'custom'
+// enum UrlParameterEnum {
+//     UTM = 'utm',
+//     CUSTOM = 'custom',
+// }; 
+// interface IUrlParameter {
+//     utm: { };
+//     custom: any;
+// }
 
 enum UtmParametersEnum {
     SOURCE = 'source',
