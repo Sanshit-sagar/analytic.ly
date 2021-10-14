@@ -21,7 +21,9 @@ import TabulatedMenu from '../components/SubMenus'
 const Home = () => {
     const setMounted = useUpdateAtom(isMountedAtom)
     
-    useEffect(() => setMounted(true))
+    useEffect(() => {
+        setMounted(true)
+    });
 
     return <TabulatedMenu />;   
 }

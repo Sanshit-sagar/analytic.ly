@@ -21,7 +21,9 @@ import TabulatedMenu from '../components/SubMenus'
 const Home = () => {
     const setMounted = useUpdateAtom(isMountedAtom)
     
-    useEffect(() => setMounted(true))
+    useEffect(() => {
+        setMounted(true)
+    });
 
     return <TabulatedMenu />;   
 }
@@ -48,7 +50,8 @@ export default Home
 //     const router = useRouter()
 //     const setIsMounted = useUpdateAtom(isMountedAtom)
 
-//     useEffect(() => setIsMounted(true))
+//     useEffect(() => setIsMounted(true)
+//     })
 
 //     return (
 //         <Box 
@@ -64,6 +67,8 @@ export default Home
 //                 }
 //             }}
 //         >
+//             {/* <Swatch />  */}
+
 //             <SteamGraph />
 //             <Button onClick={() => router.push('/menu')}>
 //                 Get Started 

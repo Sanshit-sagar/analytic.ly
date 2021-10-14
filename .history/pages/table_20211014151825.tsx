@@ -2,6 +2,7 @@ import React from 'react'
 
 import Table from '../components/Table'
 import TableLayout from '../layouts/TableLayout'
+import { AppContainer } from '../primitives/Shared'
 
 const metadata = {
     title: 'Table',
@@ -19,6 +20,7 @@ const TabulatedClicks = () => (
 );
 
 TabulatedClicks.getLayout = (page: any) => (
+   
     <TableLayout pageMetadata={metadata}> 
         {page} 
     </TableLayout>

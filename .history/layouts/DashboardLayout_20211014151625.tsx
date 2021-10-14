@@ -1,8 +1,10 @@
 import { styled } from '../stitches.config'
 
 import Head from 'next/head'
+
 import PieChart from '../components/Pie'
 import GroupedBars from '../components/Bars'
+
 import { Header } from '../components/Header'
 import { AppContainer } from '../primitives/Shared'
 import { ScrollArea } from '../primitives/ScrollArea'
@@ -89,7 +91,6 @@ const DashboardLayout = ({
                 <Header /> 
 
                 <ScrollArea>
-
                     <DashboardLayoutRow>
                         <MainComponent>
                             {children}

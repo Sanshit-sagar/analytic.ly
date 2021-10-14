@@ -30,11 +30,11 @@ const SWRConfigProvider = ({ children }: { children: ReactNode }) => (
     <SWRConfig 
         value={{
             revalidateOnMount: true,
-            revalidateOnFocus: false,
+            revalidateOnFocus: true,
             revalidateOnReconnect: false,
             refreshWhenHidden: false,
             refreshWhenOffline: false,
-            refreshInterval: 50000,
+            refreshInterval: 40000,
             fetcher: swrFetcher,
         }}
     >

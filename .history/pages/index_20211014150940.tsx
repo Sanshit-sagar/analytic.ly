@@ -1,7 +1,15 @@
+import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 
 import { atom } from 'jotai' 
 import { useUpdateAtom, atomWithStorage } from 'jotai/utils'
+import { withUser } from '@clerk/nextjs'
+
+import { Box } from '../primitives/Box'
+import { Button } from '../primitives/Button'
+
+// import { Swatch } from '../components/Swatch'
+import { SteamGraph } from '../components/StreamGraph'
 
 export const timeAgoAtom = atom(5)
 export const quantityAtom = atom(2)
@@ -18,15 +26,9 @@ export const themeAtom = atomWithStorage('theme', 'theme4-dark')
 import MenuLayout from '../layouts/MenuLayout'
 import TabulatedMenu from '../components/SubMenus'
 
-const Home = () => {
-    const setMounted = useUpdateAtom(isMountedAtom)
-    
-    useEffect(() => setMounted(true))
+const Menu = () => <TabulatedMenu />;   
 
-    return <TabulatedMenu />;   
-}
-
-Home.getLayout = function getLayout(page: any) {
+Menu.getLayout = function getLayout(page: any) {
     return (
         <MenuLayout>
             {page} 
@@ -34,21 +36,16 @@ Home.getLayout = function getLayout(page: any) {
     );
 }
 
-export default Home
 
 
-
-// import { withUser } from '@clerk/nextjs'
-// import { Box } from '../primitives/Box'
-// import { Button } from '../primitives/Button'
-// import { Swatch } from '../components/Swatch'
-// import { SteamGraph } from '../components/StreamGraph'
 
 // const Home = () => {
 //     const router = useRouter()
 //     const setIsMounted = useUpdateAtom(isMountedAtom)
 
-//     useEffect(() => setIsMounted(true))
+//     useEffect(() => {
+//         setIsMounted(true)
+//     })
 
 //     return (
 //         <Box 
@@ -64,6 +61,8 @@ export default Home
 //                 }
 //             }}
 //         >
+//             {/* <Swatch />  */}
+
 //             <SteamGraph />
 //             <Button onClick={() => router.push('/menu')}>
 //                 Get Started 
