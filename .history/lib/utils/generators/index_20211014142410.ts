@@ -13,15 +13,17 @@ export const epochRangeGenerator = function* (start: number, end: number, step: 
         yield i;
         i += step;
     }
-}
- 
+};
+
+
+// 
 export const cycleGenerator = function* (arr: any[]) {
     let i = 0;
     while (true) {
         yield arr[i % arr.length];
         i++;
     }
-}
+};
 
 // export const iterableToArray = (Iterable<T> iterable) => {
 //     const data = [1, 2, 3, 1, 2, 4]

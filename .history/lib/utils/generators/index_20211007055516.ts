@@ -13,30 +13,32 @@ export const epochRangeGenerator = function* (start: number, end: number, step: 
         yield i;
         i += step;
     }
-}
- 
+};
+
+
+// 
 export const cycleGenerator = function* (arr: any[]) {
     let i = 0;
     while (true) {
         yield arr[i % arr.length];
         i++;
     }
+};
+
+export const iterableToArray = (Iterable<T> iterable) => {
+    const data = [1, 2, 3, 1, 2, 4]
+    const values = new Set(data);
+    const uniqueValues = [...values]; // [1, 2, 3, 4]
 }
 
-// export const iterableToArray = (Iterable<T> iterable) => {
-//     const data = [1, 2, 3, 1, 2, 4]
-//     const values = new Set(data);
-//     const uniqueValues = [...values]; // [1, 2, 3, 4]
-// }
+const generatorToArray = gen => [...gen];
 
-// const generatorToArray = gen => [...gen];
+const isGeneratorFunction = (val: any) => {
+    return Object.prototype.toString.call(val) === '[object GeneratorFunction]'
+}
 
-// const isGeneratorFunction = (val: any) => {
-//     return Object.prototype.toString.call(val) === '[object GeneratorFunction]'
-// }
-
-// const isAsyncFunction = (val: any) => {
-//     return Object.prototype.toString.call(val) === '[object AsyncFunction]'
-// }
+const isAsyncFunction = (val: any) => {
+    return Object.prototype.toString.call(val) === '[object AsyncFunction]'
+}
 
   
