@@ -90,7 +90,6 @@ export async function cacheResponseHeaders(email: string) {
             responseTime, 
             cacheControl,
             responseStatus, 
-            // cfCacheStatus, 
             contentType, 
             server, 
             destination 

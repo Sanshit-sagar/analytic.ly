@@ -148,7 +148,7 @@ const StyledActions = styled(Flex, {
     fd: 'row',
     jc: 'flex-start',
     ai: 'center',
-    gap: '$',
+    gap: '$1',
 })
 
 

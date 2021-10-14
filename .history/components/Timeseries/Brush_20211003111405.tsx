@@ -50,8 +50,6 @@ const SecondaryChartHoc = ({ height, width }: ChartDims) => {
             height={height}
             width={width}
             margin={secondaryChartMargins}
-             
-            }}
         />
     );
 }

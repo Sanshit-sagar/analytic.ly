@@ -40,7 +40,7 @@ const ClickHistory = ({ interval }: { interval: string }) => {
             start: minTimestamp,
             tick: interval
         });
-    }, [clicks, loading, error, minTimestamp, interval, updateTimeserie])
+    }, [clicks, loading, error, minTimestamp, interval, updateTimeseries])
 
     if(loading) return <Text> Loading... </Text>
     if(error || !clicks?.length) return <Text> Error! </Text> 

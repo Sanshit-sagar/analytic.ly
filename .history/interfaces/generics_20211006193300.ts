@@ -20,6 +20,7 @@ type OptionsFlags<Type> = {
 type Concrete<Type> = {
     [Property in keyof Type]-?: Type[Property];
 };
+
 // type MappedTypeWithNewProperties<Type, NewKeyType> = {
 //     [Properties in keyof Type as NewKeyType]: Type[Properties]
 // }; 
